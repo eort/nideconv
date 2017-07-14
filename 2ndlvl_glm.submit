@@ -1,0 +1,24 @@
+universe = vanilla
+output = condor_logs/$(CLUSTER).$(PROCESS).out
+error = condor_logs/$(CLUSTER).$(PROCESS).err
+log = condor_logs/$(CLUSTER).$(PROCESS).log
+getenv = True
+request_cpus = 1
+request_memory = 4000
+should_transfer_files = NO
+transfer_executable = False
+initialdir = /home/data/exppsy/ora_Amsterdam/
+executable = $ENV(FSLDIR)/bin/feat
+
+arguments = sub-01/sub-01.fsf
+queue
+arguments = sub-02/sub-02.fsf
+queue
+arguments = sub-03/sub-03.fsf
+queue
+arguments = sub-04/sub-04.fsf
+queue
+arguments = sub-05/sub-05.fsf
+queue
+arguments = sub-06/sub-06.fsf
+queue
