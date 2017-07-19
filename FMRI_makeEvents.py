@@ -7,40 +7,40 @@ import sys
 import IO as io
 import glob
 
-def makeLog(data,event = None):
+def makeLog(data,cleanIdx,errorIdx,event = None):
      outFile = []
      start = data.startCurRun.iloc[0]
+     clean_data = data.loc[cleanIdx]
+     err_data = data.loc[errorIdx]
      if event == None:
 		print 'You need to specify which events you want to write!'  
      elif event == 'error':
-		for index,row in data.iterrows():
-			if row.correct == 0 and  row.miss == 0:
-				if min(row.dist_to_s1,row.dist_to_s2,row.dist_to_s3,row.dist_to_s4,row.dist_to_s5)<55:
-					outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])  
+         for index,row in err_data.iterrows():
+             outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
      elif event == 'firstFix':
-         for block in data.FirstFixOnsetTime.unique():
+         for block in clean_data.FirstFixOnsetTime.unique():
 			outFile.append([(block-start)*0.001,500,1])  
      elif event == 'secondFix':
-         for block in data.SecondFixOnsetTime.unique():
+         for block in clean_data.SecondFixOnsetTime.unique():
 			outFile.append([(block-start)*0.001,500,1])  
      elif event == 'cue':
-         for block in data.CueOnsetTime.unique():
+         for block in clean_data.CueOnsetTime.unique():
 			outFile.append([(block-start)*0.001,2500,1])  
      elif event == 'proSwitch':
-		for index,row in data.iterrows():
-			if row.df == 'free' and row.switch == True and row.correct == 1:
+		for index,row in clean_data.iterrows():
+			if row.df == 'free' and row.switch == True:
 				outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
      elif event == 'reSwitch':
-		for index,row in data.iterrows():
-			if row.df == 'forced' and row.switch == True and row.correct == 1:
+		for index,row in clean_data.iterrows():
+			if row.df == 'forced' and row.switch == True:
 				outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
      elif event == 'proRep':
-		for index,row in data.iterrows():
-			if row.df == 'free' and row.switch == False and row.correct == 1:
+		for index,row in clean_data.iterrows():
+			if row.df == 'free' and row.switch == False:
 				outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
      elif event == 'reRep':
-		for index,row in data.iterrows():
-			if row.df == 'forced' and row.switch == False and row.correct == 1:
+		for index,row in clean_data.iterrows():
+			if row.df == 'forced' and row.switch == False:
 				outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
      return outFile
  
@@ -56,28 +56,30 @@ def run(cfg):
         print "Start file: %s"%f
         eventDir = os.path.join(baseDir,'sub-%.2i'%int(f[4:6]),cfg['eventDir'])
         io.makeDirs(eventDir)
+        raw_data = pd.read_csv(eyefiles[fIdx],header=0,index_col = None)
+        raw = raw_data.copy()
+        badSubjIdx = raw.loc[~raw["subject_nr"].isin(cfg["excl_sub"])].index
+        firstSacIdx = raw.loc[raw["sac_no"]==raw["resp_saccade"]].index
+        tarDirectedSacIdx = raw.loc[raw["sac_to_S"]==raw[cfg["fixatedTarget"]]].index
+        practiceIdx = raw.loc[raw["practice"]=='no'].index
+        firstTrialIdx = raw.loc[raw["trial_no"]!=1].index
+        missIdx = raw.loc[raw["miss"]==0].index
+        outlierIdx = raw.loc[raw["outlier"]==False].index
+        RTIdx = raw.loc[raw["RT"]>100].index
+        conflictIdx = raw.loc[raw["conflict"]==False].index
+        accIdx = raw.loc[raw["correct"]==1].index
+        errorIdx = raw.loc[(raw["correct"]==0) & (raw["miss"]==0) & (raw["sac_no"]==raw["resp_saccade"])].index
+        nanIdx = raw.loc[~pd.isnull(raw["switch"])].index
         
-        rawdata = pd.read_csv(eyefiles[fIdx],header=0,index_col = None)
-        
-        raw = rawdata.copy()
-        raw = raw.loc[raw["sac_no"]==raw["resp_saccade"]] # select only first fixation in trial
-        raw = raw.loc[raw["sac_to_S"]==raw[cfg["fixatedTarget"]]]
-        raw = raw.loc[raw["practice"]=='no'] # select only non practice trials
-        proc = raw.copy() # data frame to compute accuracy
-        #proc = proc.loc[proc["miss"]==0] # select only non missed trials
-        proc = proc.loc[proc["trial_no"]!=1] # exclude first trials
-        proc =proc.dropna(subset =["switch"]) # only switches and repetitions
-        proc = proc.loc[proc["outlier"]==False] # exclude speed outliers
-        proc = proc.loc[proc["RT"]>100] # exclude speed outliers
-        proc = proc.loc[proc["conflict"]==False] # exclude speed outliers
-        acc_data = proc.copy()
-        #clean_data = acc_data.loc[acc_data["correct"]==1] # only take correct trials
-        clean_data =acc_data
+        # combine index
+        cleanIdx = (firstSacIdx & tarDirectedSacIdx & practiceIdx &\
+          firstTrialIdx & missIdx & outlierIdx & RTIdx &\
+          conflictIdx & accIdx & nanIdx & badSubjIdx)
+
         events = ['reSwitch','reRep','proSwitch','proRep','error','firstFix','secondFix','cue']
-        
         for event in events:
-            outFile = makeLog(clean_data,event)
-            name = 'sub-%.2i-%.2i_'%(clean_data.subject_nr.iloc[0],clean_data.run_no.iloc[0]) + event + '.tsv'
+            outFile = makeLog(raw,cleanIdx,errorIdx,event)
+            name = 'sub-%.2i-%.2i_'%(raw.subject_nr.iloc[0],raw.run_no.iloc[0]) + event + '.tsv'
             eventfile = os.path.join(eventDir,name)
             with open(eventfile, "w") as txtfile:
                 for val in outFile:

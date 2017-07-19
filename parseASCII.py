@@ -111,7 +111,7 @@ def run(cfg):
                             sacPending = 1                    
                         inTrial = 0
                         if sac_no == 0 and not inSac:
-                            trials.append(fallBack_sac) # so every trial number appears once
+                            pass#trials.append(fallBack_sac) # so every trial number appears once
          
                 elif line[0]=='EBLINK':
                     blink = 1 # mark a blink

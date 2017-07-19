@@ -14,46 +14,31 @@ import json
 import seaborn as sns
 
 def run(cfg):
-    # set paths
     baseDir = cfg['baseDir']
-    # read files
-    if len(sys.argv) < 2:
-       rawfiles = glob.glob(baseDir+'sub-*'+'/'+cfg["compDir"]+'/'+'*_comp.csv')
-    # selected trial columns
+    rawfiles = glob.glob(baseDir+'sub-*'+'/'+cfg["compDir"]+'/'+'*_comp.csv')
     raw_data = pd.concat([pd.read_csv(f,header=0,index_col = None) for f in rawfiles],ignore_index=True)
-    #shell()
     ##################################################
     #Select clean trials
     ##################################################
     print "Trial selection"
-    #shell()
+    # find index
     raw = raw_data.copy()
-    print raw.shape
-    raw = raw.loc[~raw["subject_nr"].isin(cfg["excl_sub"])]# exclude bad subjects
-    print raw.shape
-    raw = raw.loc[raw["sac_no"]==raw["resp_saccade"]] # select only first fixation in trial
-    print raw.shape
-    raw = raw.loc[raw["sac_to_S"]==raw[cfg["fixatedTarget"]]]
-    print raw.shape
-    raw = raw.loc[raw["practice"]=='no'] # select only non practice trials
-    print raw.shape
-    proc = raw.copy() # data frame to compute accuracy
-    proc = proc.loc[proc["miss"]==0] # select only non missed trials
-    print proc.shape
-    proc = proc.loc[proc["trial_no"]!=1] # exclude first trials
-    print proc.shape
-    proc =proc.dropna(subset =["switch"]) # only switches and repetitions
-    print proc.shape
-    proc = proc.loc[proc["outlier"]==False] # exclude speed outliers
-    print proc.shape
-    proc = proc.loc[proc["RT"]>100] # exclude speed outliers
-    print proc.shape
-    proc = proc.loc[proc["conflict"]==False] # exclude speed outliers
-    print proc.shape
-    #proc = proc.loc[proc["conflict"]==0] # exclude speed outliers
-    acc_data = proc.copy()
-    clean_data = acc_data.loc[acc_data["correct"]==1] # only take correct trials
-    print clean_data.shape
+    badSubjIdx = raw.loc[~raw["subject_nr"].isin(cfg["excl_sub"])].index
+    firstSacIdx = raw.loc[raw["sac_no"]==raw["resp_saccade"]].index
+    tarDirectedSacIdx = raw.loc[raw["sac_to_S"]==raw[cfg["fixatedTarget"]]].index
+    practiceIdx = raw.loc[raw["practice"]=='no'].index
+    firstTrialIdx = raw.loc[raw["trial_no"]!=1].index
+    missIdx = raw.loc[raw["miss"]==0].index
+    outlierIdx = raw.loc[raw["outlier"]==False].index
+    RTIdx = raw.loc[raw["RT"]>100].index
+    conflictIdx = raw.loc[raw["conflict"]==False].index
+    accIdx = raw.loc[raw["correct"]==1].index
+    nanIdx = raw.loc[~pd.isnull(raw["switch"])].index
+    #exclude
+    clean_data = raw.loc[firstSacIdx & tarDirectedSacIdx & practiceIdx &\
+          firstTrialIdx & missIdx & outlierIdx & RTIdx &\
+          conflictIdx & accIdx & nanIdx & badSubjIdx]
+    
     ##################################################
     #Analysis1
     ##################################################    

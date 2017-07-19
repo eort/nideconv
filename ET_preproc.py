@@ -33,6 +33,7 @@ def run(cfg):
     csvfiles = glob.glob(baseDir+'sub-*'+'/'+cfg["behavDir"]+'/'+'*.csv')
     eyefiles.sort();csvfiles.sort()
 
+
     ##################################################
     #Load data, add variables and combine data frames
     ##################################################
@@ -43,25 +44,28 @@ def run(cfg):
         compDir = os.path.join(baseDir,'sub-%.2i'%int(f[4:6]),cfg['compDir'])
         io.makeDirs(compDir)
         writepath = os.path.join(compDir,f[:-7]+'comp.csv') #outpath
-        
+
         eye_data =pd.read_csv(eyefiles[fIdx],header=0,index_col = None) # parsed eye
         trial_data=pd.read_csv(csvfiles[fIdx],header=0,index_col = None,na_values="None",usecols =include_col) # OS output    
-              
+       
         # temporary block count fix
         # fix for wrong fixated index for first 4 runs of subject 1 (increase index by one, unless it is a timeout)
         if f in ['sub-01-01_edf.csv','sub-01-02_edf.csv','sub-01-03_edf.csv','sub-01-04_edf.csv']:
             trial_data[fixatedTarget].loc[trial_data['trial_duration']<2950] =  's' +(pd.to_numeric(trial_data[fixatedTarget].loc[trial_data['trial_duration']<2950].str[-1])+1).astype(str)
         trial_data[fixatedTarget].replace('s0',np.nan,inplace=True)
 
-        trialBlocks = trial_data.block_no.unique()
-        eyeBlocks = eye_data.block_no.unique()
+        # if a trial was stopped due to exceeding of time limit, the last good
+        # trial number was reset to 1. The next two lines fix that. 
+        termIdx = trial_data.loc[trial_data.terminated == 1].index
+        trial_data.loc[termIdx,"trial_no"] = list(trial_data.trial_no.loc[termIdx-1]+1) # don't know why I have to wrap it into a list
+        trialBlocks =  trial_data.block_no.unique()
+        eyeBlocks = eye_data.block_no.unique() 
         try:
             trial_data["block_no"].replace(trialBlocks,eyeBlocks,inplace=True)
         except ValueError:
             trialBlocks = np.insert(trialBlocks,0,-99)
             trial_data["block_no"].replace(trialBlocks,eyeBlocks,inplace=True)
-        if all(trial_data.run_no != int(f[7:9])):
-            trial_data.run_no = eye_data.run_no.iloc[0]
+        trial_data.run_no = int(f[7:9]) # make sure run number is correct
 
         trial_data['target_category'] = eu.getTarget(trial_data,fixatedTarget,[target1,target2],'_color')
         trial_data['switch'] = trial_data.groupby(['subject_nr','block_no'])['target_category'].apply(eu.getSwitch) # time between successive switches
@@ -69,7 +73,6 @@ def run(cfg):
         trial_data['switch_interval'] = trial_data.groupby(['subject_nr','block_no'])['switch','stim_on'].apply(eu.getInterval) # time between successive switches
         trial_data['dists'] = eu.findDist([trial_data['s1_x'],trial_data['s1_y']],[trial_data['s2_x'],trial_data['s2_y']],[trial_data['s3_x'],trial_data['s3_y']]).min(axis=0)
         trial_data['conflict'] = trial_data['dists']<90
-        
         raw_data = pd.merge(eye_data,trial_data,on=['subject_nr','run_no','block_no','trial_no'])
         
         raw_data["RT"] = pd.Series(raw_data.sacLatency,name = "RT")
@@ -80,7 +83,7 @@ def run(cfg):
         raw_data["outlier"]=np.abs(raw_data["zRT"])>3
 
         stim_angles = eu.genCoordComparison(raw_data,eu.angle,['end_prev_x','end_prev_y'],['s[12345]_x','s[12345]_y'])  
-        stim_dists = eu.genCoordComparison(raw_data,eu.dist,['end_prev_x','end_prev_y'],['s[12345]_x','s[12345]_y'])  
+        stim_dists = eu.genCoordComparison(raw_data,eu.dist,['s_cur_x','s_cur_y'],['s[12345]_x','s[12345]_y'])  
         # compute eye position related variables
         for idx in range(len(stim_angles)):
             label_ang = 'angle_to_s%s'%(idx+1)
