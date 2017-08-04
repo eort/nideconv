@@ -42,6 +42,8 @@ def makeLog(data,cleanIdx,errorIdx,event = None):
 		for index,row in clean_data.iterrows():
 			if row.df == 'forced' and row.switch == False:
 				outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
+     if len(outFile) == 0:
+        outFile.append([0,0,0])
      return outFile
  
 def run(cfg):
