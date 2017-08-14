@@ -11,15 +11,8 @@ else
 	subs=$2
 fi
 
-if [ "$3" == "" ]; then
-	max=9
-else
-	max=$3
-fi
-
 # populate files
 for SUB in $(seq -f "%02g" 1 $subs);do
-	for i in $(seq -f "%02g" 1 $max);do
-		sed -e "s/##SUB##/$SUB/g; s/##RUN##/$i/g" < $1 > sub-${SUB}/fsf/sub-${SUB}_run-${i}.fsf
-	done
+	sed -e "s/##SUB##/$SUB/g" < $1 > sub-${SUB}/fsf/sub-${SUB}_1stLvl.submit
 done
+

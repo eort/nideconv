@@ -1,0 +1,30 @@
+#!/bin/bash
+
+## check input
+
+if [ "$1" == "" ]; then
+    echo ERROR. You need to specify the directory of the raw files
+    exit -1
+else 
+    rawDir="$1"
+fi
+
+# set a couple of variables
+nif="_nifti"
+
+for f in $array; do
+       	# set subject ID
+       	su=${f:0:4}
+		
+       	# start conversion
+       	# unpack stuff
+	#mkdir $rawDir$su
+       	#tar zxvf $rawDir$f -C $rawDir$su
+ 
+	# make dir for the niftis
+     	#outdir=$rawDir$su$nif
+	#mkdir -p $outdir
+
+       	# convert dcm to nifti
+       	#mcverter -v -o $outdir raw/dcm/$su/study* -f fsl -d
+done
