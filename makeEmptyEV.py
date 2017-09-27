@@ -22,18 +22,14 @@ os.system('rm %s' %outfile)
 all_events = glob.glob('/home/data/exppsy/ora_Amsterdam/sub*/func/%s/*.tsv'%evkey)
 all_events.sort()
 
-
-empty = []
 for f in all_events:
 	with open(f, 'r') as infile:
 		for idx,l in enumerate(infile):
 			allVal = sum(io.str2list(l))
 			if allVal == 0 and 'error' not in f:
 				evF = op.basename(f)
-				specs = '%s\t%s\t%s'%(evF[4:6],evF[7:9],evF[10:-4-len(evkey)])
-				empty.append(specs)
-			break
-with open(outfile, 'w') as out:
-	for f in empty:
-		out.write(f + '\n')
-print empty, len(empty)
+				specs = '%s\t%s\t%s\n'%(evF[4:6],evF[7:9],evF[10:-4-len(evkey)])
+				print specs
+				with open(outfile, 'a') as out:
+						out.write(specs)
+			

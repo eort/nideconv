@@ -27,7 +27,7 @@ def run(cfg):
         baseDir = cfg['localeBaseDir'] # root directory on server
     template = op.join(baseDir,cfg['templateDir'],cfg['templateFSF']) # template fsf file
     ID = cfg['ID'] # Key phrase of analysis that should be run
-    COPES = cfg['COPES'] # Which Contrasts should be analyzed
+    nCopes = cfg['nCopes'] # How many contrasts are there
     fsfDir = op.join(baseDir,cfg['fsfDir']) # Dir of newly created fsf files
     modelDir = op.join(baseDir,cfg['modelDir']) # Dir for newly created submit files
     templateSubmit = op.join(baseDir,cfg['templateDir'],cfg['templateSubmit']) # template submit file
@@ -42,11 +42,12 @@ def run(cfg):
     subjects = runsPerSubject.keys(); subjects.sort() #extract sub number and sort
     # load specific information which runs were empty
     emptyEVfile = op.join(baseDir,'generalInfo',cfg['emptyRuns'])
-    emptyRuns = []
+    emptyRuns = {'%02d'%i:[] for i in range(1,25)}
     with open(emptyEVfile, 'r') as infile:
-		for idx,l in enumerate(infile):
-			emptyRuns.append(io.str2list(l))    
-            
+        for x,l in enumerate(infile):
+            llist = l.split()
+            emptyRuns[llist[0]].append(llist[1:])
+    shell()
     """""""""""""""""""""""""""
     #STEP 2: CREATE FSF and SUBFILES
     """""""""""""""""""""""""""
@@ -54,16 +55,17 @@ def run(cfg):
         # First skip bad subjects
         if SUB in cfg['excl_subj']:
             continue
-        # create folders if not yet existent
-        if not op.exists(op.join(modelDir%(SUB),'%s'%ID)): # submit dir
-            print('Creating new folder %s'%(op.join(modelDir%(SUB),'%s'%ID)))
-            os.system("mkdir %s"%(op.join(modelDir%(SUB),'%s'%ID)))
+        # create output directory if not yet existent
+        if not op.exists(modelDir%(SUB)): # submit dir
+            print('Creating new folder %s'%(modelDir%(SUB)))
+            os.system("mkdir %s"%(modelDir%(SUB)))
         # copy submit template to subject specific dir
         submitfile = op.join(modelDir%SUB,'sub-%02d_%s_2ndlvl.submit'%(SUB,ID))
         os.system('sed -e "s/##SUB##/%02d/g" < %s > %s'%(SUB,templateSubmit,submitfile))
-        
+              
         # loop over runs and create fsf files
-        for RUN in range(1,runsPerSubject[SUB]+1):
+        for COPE in range(1,nCopes+1):
+            
             # define the output fsf filename
             outfile = op.join(fsfDir%(SUB,ID),'sub-%02d_run-%02d_%s.fsf'%(SUB,RUN,ID))
             # make fsf files

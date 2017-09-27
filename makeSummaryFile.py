@@ -14,12 +14,11 @@ except IndexError as e:
 try:
 	outfile = op.abspath(sys.argv[2])
 except IndexError as e:
-	outfile = '/home/data/exppsy/ora_Amsterdam/lvl1_QC_FreeChoiceME_COPE.html'
+	outfile = '/home/data/exppsy/ora_Amsterdam/lvl1_QC_search.html'
 
 all_feats = glob.glob('/home/data/exppsy/ora_Amsterdam/sub*/models/*%s.feat/'%featkey)
 all_feats.sort()
 
-os.system("mkdir files")
 with open(outfile, 'w') as out:    
     for f in all_feats:
 		out.write("<p>============================================")
