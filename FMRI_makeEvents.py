@@ -8,53 +8,86 @@ import IO as io
 import glob
 
 def makeLog(data,cleanIdx,errorIdx,event = None):
-     outFile = []
-     start = data.startCurRun.iloc[0]
-     clean_data = data.loc[cleanIdx]
-     err_data = data.loc[errorIdx]
-     if event == None:
-		print 'You need to specify which events you want to write!'  
-     elif event == 'error':
-         for index,row in err_data.iterrows():
+    outFile = []
+    start = data.startCurRun.iloc[0]
+    clean_data = data.loc[cleanIdx]
+    err_data = data.loc[errorIdx]
+    if event == None:
+    	print 'You need to specify which events you want to write!'  
+    elif event == 'error':
+        for index,row in err_data.iterrows():
              outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
-     elif event == 'firstFix':
-         for block in clean_data.FirstFixOnsetTime.unique():
-			outFile.append([(block-start)*0.001,500,1])  
-     elif event == 'secondFix':
-         for block in clean_data.SecondFixOnsetTime.unique():
-			outFile.append([(block-start)*0.001,500,1])  
-     elif event == 'cue':
-         for block in clean_data.CueOnsetTime.unique():
-			outFile.append([(block-start)*0.001,2500,1])  
-     elif event == 'proSwitch':
+    elif event == 'firstFix':
+        for block in data.FirstFixOnsetTime.unique():
+			outFile.append([(block-start)*0.001,0.5,1])  
+    elif event == 'secondFix':
+        for block in data.SecondFixOnsetTime.unique():
+			outFile.append([(block-start)*0.001,0.5,1])  
+    elif event == 'cue':
+        for block in data.CueOnsetTime.unique():
+			outFile.append([(block-start)*0.001,0.5,1])  
+    elif event == 'proSwitch':
 		for index,row in clean_data.iterrows():
 			if row.df == 'free' and row.switch == True:
 				outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
-     elif event == 'reSwitch':
+    elif event == 'reSwitch':
 		for index,row in clean_data.iterrows():
 			if row.df == 'forced' and row.switch == True:
 				outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
-     elif event == 'proRep':
+    elif event == 'proRep':
 		for index,row in clean_data.iterrows():
 			if row.df == 'free' and row.switch == False:
 				outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
-     elif event == 'reRep':
+    elif event == 'reRep':
 		for index,row in clean_data.iterrows():
 			if row.df == 'forced' and row.switch == False:
 				outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
-     if len(outFile) == 0:
+    elif event == 'proSwitchTD':
+        for index,row in clean_data.iterrows():
+            if row.df == 'free' and row.switch == True and row.trial_type == 0:
+                outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
+    elif event == 'reSwitchTD':
+        for index,row in clean_data.iterrows():
+            if row.df == 'forced' and row.switch == True and row.trial_type == 1:
+                outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
+    elif event == 'proRepTD':
+        for index,row in clean_data.iterrows():
+            if row.df == 'free' and row.switch == False and row.trial_type == 0:
+                outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
+    elif event == 'reRepTD':
+        for index,row in clean_data.iterrows():
+            if row.df == 'forced' and row.switch == False and row.trial_type == 1:
+                outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])    
+    elif event == 'proSwitchDD':
+        for index,row in clean_data.iterrows():
+            if row.df == 'free' and row.switch == True and row.trial_type == 1:
+                outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
+    elif event == 'reSwitchDD':
+        for index,row in clean_data.iterrows():
+            if row.df == 'forced' and row.switch == True and row.trial_type == 0:
+                outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
+    elif event == 'proRepDD':
+        for index,row in clean_data.iterrows():
+            if row.df == 'free' and row.switch == False and row.trial_type == 1:
+                outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
+    elif event == 'reRepDD':
+        for index,row in clean_data.iterrows():
+            if row.df == 'forced' and row.switch == False and row.trial_type == 0:
+                outFile.append([(row.stim_on-start)*0.001,row.RT*0.001,1])
+    if len(outFile) == 0:
         outFile.append([0,0,0])
-     return outFile
+    return outFile
  
 def run(cfg):
+    analID = cfg["analID"]
     baseDir = cfg['baseDir']
     eyefiles = glob.glob(baseDir+'sub-*'+'/'+cfg["compDir"]+'/'+'*_comp.csv')
     eyefiles.sort();
 
     for fIdx in range(len(eyefiles)):
         f = os.path.basename(eyefiles[fIdx])
-        if int(f[4:6]) in cfg["excl_sub"]:
-            continue
+        #if int(f[4:6]) in cfg["excl_sub"]: # Exclude unusuable participants
+        #    continue
         print "Start file: %s"%f
         eventDir = os.path.join(baseDir,'sub-%.2i'%int(f[4:6]),cfg['eventDir'])
         io.makeDirs(eventDir)
@@ -78,11 +111,15 @@ def run(cfg):
           firstTrialIdx & missIdx & outlierIdx & RTIdx &\
           conflictIdx & accIdx & nanIdx & badSubjIdx)
 
-        events = ['reSwitch','reRep','proSwitch','proRep','error','firstFix','secondFix','cue']
+        events = ['reSwitch','reRep','proSwitch','proRep','error','cue','firstFix','secondFix']
+        #events = ['reSwitchTD','reRepTD','proSwitchTD','proRepTD','error',\
+        #            'reSwitchDD','reRepDD','proSwitchDD','proRepDD','cue','firstFix','secondFix']
         for event in events:
             outFile = makeLog(raw,cleanIdx,errorIdx,event)
-            name = 'sub-%.2i-%.2i_'%(raw.subject_nr.iloc[0],raw.run_no.iloc[0]) + event + '.tsv'
-            eventfile = os.path.join(eventDir,name)
+            name = 'sub-%.2i-%.2i_'%(raw.subject_nr.iloc[0],raw.run_no.iloc[0]) + event + analID + '.tsv'
+            eventfile = os.path.join(eventDir,analID,name)
+            if not os.path.exists(os.path.dirname(eventfile)):
+                    os.makedirs(os.path.dirname(eventfile))
             with open(eventfile, "w") as txtfile:
                 for val in outFile:
                     txtfile.write("%f\t%f\t%f \n"%(val[0], val[1], val[2] ))

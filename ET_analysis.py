@@ -60,13 +60,13 @@ def run(cfg):
     
     switchPlot = sns.barplot(x="df", y="mRT", hue="switch",
                                 palette= ('dimgrey','darkgrey','dimgrey','darkgrey'),data=Secondlvl1,ci=68)
-    switchPlot.set(ylim=(200, 300))
+    switchPlot.set(ylim=(340, 500))
     switchPlot.set(ylabel="Saccade Latency (ms)")
-    switchPlot.set(xlabel="Mode of Cognitive Control")
-    
+    switchPlot.set(xlabel="Target Availability")
+    switchPlot.set_xticklabels(['One Target Available','Both Targets Available'])
     sns.despine()
     fig = switchPlot.get_figure()
-    #fig.savefig(os.path.join(plotDir,"SwitchCosts.pdf"))
+    fig.savefig(os.path.join(cfg['baseDir'],cfg['plotDir'],"SC_behaviour.pdf"))
     #sns.plt.show()
 if __name__ == '__main__':  
     try:

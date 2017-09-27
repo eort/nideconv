@@ -12,7 +12,7 @@
 	"statsDir":"statcsv",
 	"block_start":0,
 	"eventDir":"func",
-	"plotDir":"plotcsv",
+	"plotDir":"figures",
 	"standard_coordinates":1,
 	"screen_width":1280,
 	"screen_height":840,
@@ -29,7 +29,7 @@
         "trial_duration","stim_on","exit_time","findPos_time","no_switch",
         "sleep","ITI","filler_block","prepTime","r","run_length","run_limit",
         "CueOnsetTime","FirstFixOnsetTime","FmriTriggerTime","SecondFixOnsetTime",
-        "curfix_x","curfix_y","free_seqs","t_off","time_in_block","time_in_run",
+        "curfix_x","curfix_y","t_off","time_in_block","time_in_run",
         "endCurRun","startCurRun"],
     "fixatedTarget":"fixatedStim",
     "target1":"tc1",
@@ -37,5 +37,6 @@
     "parseScript":"parseASCII",
     "preprocScript":"ET_preproc",
     "analysisScript":"ET_analysis",
-    "eventsScript":"FMRI_makeEvents"
+    "eventsScript":"FMRI_makeEvents",
+    "analID":"FreeChoiceME"
 }
