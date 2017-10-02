@@ -25,15 +25,16 @@ def run(cfg):
         assert os.path.exists(baseDir)
     except AssertionError: 
         baseDir = cfg['localeBaseDir'] # root directory on server
-    template = op.join(baseDir,cfg['templateDir'],cfg['templateFSF']) # template fsf file
+
     ID = cfg['ID'] # Key phrase of analysis that should be run
     nCopes = cfg['nCopes'] # How many contrasts are there
     fsfDir = op.join(baseDir,cfg['fsfDir']) # Dir of newly created fsf files
+    infoDir = op.join(baseDir,cfg['infoDir']) # Dir of newly created fsf files
     modelDir = op.join(baseDir,cfg['modelDir']) # Dir for newly created submit files
     templateSubmit = op.join(baseDir,cfg['templateDir'],cfg['templateSubmit']) # template submit file
     
     # load file with subject numbers and run numbers per subject
-    runsPerSubjectFile = op.join(baseDir,'generalInfo',cfg['runsPerSubject']) # filename
+    runsPerSubjectFile = op.join(infoDir,cfg['runsPerSubject']) # filename
     runsPerSubject = dict() # init container
     with open(runsPerSubjectFile, 'r') as infile:
         for x,l in enumerate(infile):
@@ -41,12 +42,18 @@ def run(cfg):
             runsPerSubject[runs[0]] = runs[1] # add subject:run dict
     subjects = runsPerSubject.keys(); subjects.sort() #extract sub number and sort
     # load specific information which runs were empty
-    emptyEVfile = op.join(baseDir,'generalInfo',cfg['emptyRuns'])
+    emptyEVfile = op.join(infoDir,cfg['emptyRuns'])
     emptyRuns = {'%02d'%i:[] for i in range(1,25)}
     with open(emptyEVfile, 'r') as infile:
         for x,l in enumerate(infile):
             llist = l.split()
             emptyRuns[llist[0]].append(llist[1:])
+    copeDependencies = op.join(infoDir,cfg['copeDependencies'])
+    copeDepend = {}
+    with open(copeDependencies, 'r') as infile:
+        for x,l in enumerate(infile):
+            llist = l.split()
+            copeDepend[llist[0]] = llist[1:]
     shell()
     """""""""""""""""""""""""""
     #STEP 2: CREATE FSF and SUBFILES
@@ -59,13 +66,27 @@ def run(cfg):
         if not op.exists(modelDir%(SUB)): # submit dir
             print('Creating new folder %s'%(modelDir%(SUB)))
             os.system("mkdir %s"%(modelDir%(SUB)))
+        if not op.exists(fsfDir%(SUB,ID)): # submit dir
+            print('Creating new folder %s'%(fsfDir%(SUB,ID)))
+            os.system("mkdir %s"%(fsfDir%(SUB,ID)))
         # copy submit template to subject specific dir
         submitfile = op.join(modelDir%SUB,'sub-%02d_%s_2ndlvl.submit'%(SUB,ID))
         os.system('sed -e "s/##SUB##/%02d/g" < %s > %s'%(SUB,templateSubmit,submitfile))
               
         # loop over runs and create fsf files
         for COPE in range(1,nCopes+1):
+            goodRuns = range(1,runsPerSubject[SUB]+1)
+            badRuns = emptyRuns['%02d'%SUB]
+            requiredEV = copeDepend['%s'%SUB]
             
+            for r in badRuns:
+                if r[1] in requiredEV:
+                    try:
+                        goodRuns.remove(int(r[0]))
+                    except:
+                        print 'RUN %s already removed'%r
+            
+            template = op.join(baseDir,cfg['templateDir'],cfg['templateFSF_%s'%len(goodRuns)]) # template fsf file
             # define the output fsf filename
             outfile = op.join(fsfDir%(SUB,ID),'sub-%02d_run-%02d_%s.fsf'%(SUB,RUN,ID))
             # make fsf files
