@@ -91,8 +91,8 @@ def run(cfg):
             outfile = op.join(fsfDir%(SUB,ID),'sub-%02d_cope-%02d_%s.fsf'%(SUB,COPE,ID))
             # make fsf files
             os.system('sed -e "s/##SUB##/%02d/g; s/##COPE##/%d/g" < %s > %s'%(SUB,COPE,template,outfile))
-            for idx,RUN in enumerate(goodRuns):
-                os.system('sed -e "s/##RUN%sE##/%d/g" %s'%(idx,RUN,outfile))
+            for idx,RUN in enumerate(goodRuns,1):
+                os.system('sed -i "s/##RUN%s##/%d/g" %s'%(idx,RUN,outfile))
             # add fsf file to submit file
             with open(submitfile, 'a') as out:
                 out.write("\narguments = fsf/2ndlvl/%s/sub-%02d_cope-%02d_%s.fsf\n"%(ID,SUB,COPE,ID))
