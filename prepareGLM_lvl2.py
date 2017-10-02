@@ -54,7 +54,7 @@ def run(cfg):
         for x,l in enumerate(infile):
             llist = l.split()
             copeDepend[llist[0]] = llist[1:]
-    shell()
+
     """""""""""""""""""""""""""
     #STEP 2: CREATE FSF and SUBFILES
     """""""""""""""""""""""""""
@@ -77,8 +77,7 @@ def run(cfg):
         for COPE in range(1,nCopes+1):
             goodRuns = range(1,runsPerSubject[SUB]+1)
             badRuns = emptyRuns['%02d'%SUB]
-            requiredEV = copeDepend['%s'%SUB]
-            
+            requiredEV = copeDepend['%s'%COPE]
             for r in badRuns:
                 if r[1] in requiredEV:
                     try:
@@ -92,7 +91,7 @@ def run(cfg):
             # make fsf files
             os.system('sed -e "s/##SUB##/%02d/g; s/##COPE##/%d/g" < %s > %s'%(SUB,COPE,template,outfile))
             for idx,RUN in enumerate(goodRuns,1):
-                os.system('sed -i "s/##RUN%s##/%d/g" %s'%(idx,RUN,outfile))
+                os.system('sed -i "s/##RUN%s##/%02d/g" %s'%(idx,RUN,outfile))
             # add fsf file to submit file
             with open(submitfile, 'a') as out:
                 out.write("\narguments = fsf/2ndlvl/%s/sub-%02d_cope-%02d_%s.fsf\n"%(ID,SUB,COPE,ID))
@@ -101,11 +100,6 @@ def run(cfg):
         if cfg['execute']:
             os.system("condor_submit %s"%submitfile)
         print('Finished participant %02d'%SUB)
-
-# populate files
-#for SUB in $(seq -f "%02g" 1 $subs);do
-#	sed -e "s/##SUB##/$SUB/g; s/##ID##/$ID/g" < $1 > sub-${SUB}/models/sub-${SUB}_${ID}_${LVL}.submit
-#done
 
 if __name__== '__main__':
     try:
