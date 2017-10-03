@@ -58,7 +58,7 @@ def run(cfg):
         # copy submit template to subject specific dir
         submitfile = op.join(modelDir%SUB,'sub-%02d_%s_1stlvl.submit'%(SUB,ID))
         os.system('sed -e "s/##SUB##/%02d/g" < %s > %s'%(SUB,templateSubmit,submitfile))
-        
+
         # loop over runs and create fsf files
         for RUN in range(1,runsPerSubject[SUB]+1):
             # define the output fsf filename

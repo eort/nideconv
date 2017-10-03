@@ -28,33 +28,15 @@ def run(cfg):
 
     ID = cfg['ID'] # Key phrase of analysis that should be run
     nCopes = cfg['nCopes'] # How many contrasts are there
+    nSubs = cfg['nSubs'] # How many contrasts are there
     fsfDir = op.join(baseDir,cfg['fsfDir']) # Dir of newly created fsf files
     infoDir = op.join(baseDir,cfg['infoDir']) # Dir of newly created fsf files
     modelDir = op.join(baseDir,cfg['modelDir']) # Dir for newly created submit files
     templateSubmit = op.join(baseDir,cfg['templateDir'],cfg['templateSubmit']) # template submit file
-    
-    # load file with subject numbers and run numbers per subject
-    runsPerSubjectFile = op.join(infoDir,cfg['runsPerSubject']) # filename
-    runsPerSubject = dict() # init container
-    with open(runsPerSubjectFile, 'r') as infile:
-        for x,l in enumerate(infile):
-            runs = io.str2list(l)
-            runsPerSubject[runs[0]] = runs[1] # add subject:run dict
-    subjects = runsPerSubject.keys(); subjects.sort() #extract sub number and sort
-    # load specific information which runs were empty
-    emptyEVfile = op.join(infoDir,cfg['emptyRuns'])
-    emptyRuns = {'%02d'%i:[] for i in range(1,25)}
-    with open(emptyEVfile, 'r') as infile:
-        for x,l in enumerate(infile):
-            llist = l.split()
-            emptyRuns[llist[0]].append(llist[1:])
-    copeDependencies = op.join(infoDir,cfg['copeDependencies']%ID)
-    copeDepend = {}
-    with open(copeDependencies, 'r') as infile:
-        for x,l in enumerate(infile):
-            llist = l.split()
-            copeDepend[llist[0]] = llist[1:]
-
+    shell()
+    if not op.exists(fsfDir%(SUB,ID)): # submit dir
+       print('Creating new folder %s'%(fsfDir%(SUB,ID)))
+       os.system("mkdir %s"%(fsfDir%(SUB,ID)))   
     """""""""""""""""""""""""""
     #STEP 2: CREATE FSF and SUBFILES
     """""""""""""""""""""""""""
