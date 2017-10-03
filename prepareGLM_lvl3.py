@@ -29,14 +29,14 @@ def run(cfg):
     ID = cfg['ID'] # Key phrase of analysis that should be run
     nCopes = cfg['nCopes'] # How many contrasts are there
     nSubs = cfg['nSubs'] # How many contrasts are there
-    fsfDir = op.join(baseDir,cfg['fsfDir']) # Dir of newly created fsf files
+    fsfDir = op.join(baseDir,cfg['fsfDir']%ID) # Dir of newly created fsf files
     infoDir = op.join(baseDir,cfg['infoDir']) # Dir of newly created fsf files
-    modelDir = op.join(baseDir,cfg['modelDir']) # Dir for newly created submit files
+    modelDir = op.join(baseDir,cfg['modelDir']%s) # Dir for newly created submit files
     templateSubmit = op.join(baseDir,cfg['templateDir'],cfg['templateSubmit']) # template submit file
     shell()
-    if not op.exists(fsfDir%(SUB,ID)): # submit dir
-       print('Creating new folder %s'%(fsfDir%(SUB,ID)))
-       os.system("mkdir %s"%(fsfDir%(SUB,ID)))   
+    if not op.exists(fsfDir): # submit dir
+       print('Creating new folder %s'%(fsfDir))
+       os.makedirs(fsfDir)
     """""""""""""""""""""""""""
     #STEP 2: CREATE FSF and SUBFILES
     """""""""""""""""""""""""""
