@@ -16,7 +16,7 @@ try:
 except IndexError as e:
 	outfile = '/home/data/exppsy/ora_Amsterdam/lvl1_QC_search.html'
 
-all_feats = glob.glob('/home/data/exppsy/ora_Amsterdam/sub*/models/*%s.feat/'%featkey)
+all_feats = glob.glob('/home/data/exppsy/ora_Amsterdam/sub*/models/1stlvl/*%s.feat/'%featkey)
 all_feats.sort()
 
 with open(outfile, 'w') as out:    
