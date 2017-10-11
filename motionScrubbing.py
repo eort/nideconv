@@ -25,6 +25,7 @@ os.system("rm %s"%out_bad_pp )
 
 
 for bold in boldfiles:
+    print('Analzying %s'%bold)
     strippedBold = bold[:-7] # remove file path
     curDir = op.dirname(bold)
     motionDir = '%s/motion_assess'%curDir
