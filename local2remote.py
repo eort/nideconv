@@ -8,40 +8,36 @@ mode: loc2rem or rem2loc
 import os
 import sys
 import os.path as op
-import glob
 from IPython import embed as shell
-import subprocess
 
-
-def run(inputfile,outputfile,mode = 'rem2loc'):
-    
+def run(inputfile,mode,outputfile):
+    # set what to replace with what
     if mode == 'rem2loc':
-        key = '/home/data/exppsy/ora_Amsterdam'
+        key = '/home/data/exppsy/ora_Amsterdam/'
         repl = '/run/user/1000/gvfs/sftp:host=medusa.ovgu.de,user=ort/home/data/exppsy/ora_Amsterdam/'
     elif mode == 'loc2rem':
-        repl = '/home/data/exppsy/ora_Amsterdam'
+        repl = '/home/data/exppsy/ora_Amsterdam/'
         key = '/run/user/1000/gvfs/sftp:host=medusa.ovgu.de,user=ort/home/data/exppsy/ora_Amsterdam/'
-        
-    with open(inputfile,'r') as infile:
-        for x,l in enumerate(infile):
-            shell()
-            if key in l
+    # use command line sed to do conversion
+    os.system('sed -e "s~%s~%s~g" < %s > %s'%(key,repl,inputfile,outputfile))
+            
 if __name__ == '__main__':
-    # Check input
+    # Check inputs
     try:
         	inputfile = op.abspath(sys.argv[1]) 
     except IndexError:
         print('You need to specify configuration file for this analysis')
-        sys.exit()        
+        sys.exit()   
     try:
-        	outputfile = op.abspath(sys.argv[2]) 
-    except IndexError:
-        infile, extension = op.splitext(inputfile)
-        outputfile = op.join(infile,'_conv',extension)
-        print('Use default outputfile ')              
-    try:
-        	mode = sys.argv[3]
+        	mode = sys.argv[2]
     except IndexError:
         mode = 'rem2loc'
-        print('Convert to locale (default)')        
-    run(inputfile,outputfile,mode)
+        print('Convert to locale (default)')  
+    try:
+        	outputfile = op.abspath(sys.argv[3]) 
+    except IndexError:
+        infile, extension = op.splitext(inputfile)
+        outputfile = infile + '_conv' + extension
+        print('Use default outputfile ')              
+    # run replacement 
+    run(inputfile,mode,outputfile)
