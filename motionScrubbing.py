@@ -32,7 +32,7 @@ for bold in boldfiles:
         print('Creating new folder %s'%motionDir)
         os.system("mkdir %s"%motionDir)
     
-    os.system('fsl5.0-fsl_motion_outliers -i -o %s/confound.txt --fd --thresh=0.9 -p %s/fd_plot -v > %s/outlier_output.txt'%(strippedBold,motionDir,motionDir,motionDir))
+    os.system('fsl5.0-fsl_motion_outliers -i %s -o %s/confound.txt --fd --thresh=0.9 -p %s/fd_plot -v > %s/outlier_output.txt'%(strippedBold,motionDir,motionDir,motionDir))
     os.system("cat %s/outlier_output.txt >> %s"%(motionDir, outhtml))
     os.system("echo '<p>=============<p>FD plot %s <br><IMG BORDER=0 SRC=%s/fd_plot.png WIDTH=100%s></BODY></HTML>' >> %s"%(motionDir, motionDir,'%', outhtml))
     if os.path.isfile("%s/confound.txt"%motionDir)==False:
