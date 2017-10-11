@@ -5,6 +5,7 @@ import sys
 import os.path as op
 import glob
 from IPython import embed as shell
+import subprocess
 
 try:
 	parentDir = sys.argv[1]
@@ -33,7 +34,17 @@ for bold in boldfiles:
         os.system("mkdir %s"%motionDir)
     
     os.system('fsl_motion_outliers -i -o %s/confound.txt --fd --thresh=0.9 -p %s/fd_plot -v > %s/outlier_output.txt'%(strippedBold,motionDir,motionDir,motionDir))
-    
+    os.system("cat %s/outlier_output.txt >> %s"%(motionDir, outhtml))
+    os.system("echo '<p>=============<p>FD plot %s <br><IMG BORDER=0 SRC=%s/fd_plot.png WIDTH=100%s></BODY></HTML>' >> %s"%(motionDir, motionDir,'%', outhtml))
+    if os.path.isfile("%s/confound.txt"%motionDir)==False:
+      os.system("touch %s/confound.txt"%motionDir)    
+      
+    output = subprocess.check_output("grep -o 1 %s/confound.txt | wc -l"%motionDir, shell=True)
+    num_scrub = [int(s) for s in output.split() if s.isdigit()]
+    shell()
+    if num_scrub[0]>45:
+        with open(out_bad_bold_list, "a") as myfile:
+          myfile.write("%s\n"%(cur_bold))      
     
 with open(outfile, 'w') as out:    
     for f in all_feats:
