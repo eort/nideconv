@@ -37,7 +37,7 @@ if __name__ == '__main__':
         	outputfile = op.abspath(sys.argv[3]) 
     except IndexError:
         infile, extension = op.splitext(inputfile)
-        outputfile = infile + '_conv' + extension
+        outputfile = infile + '_'+ mode[-3:] + extension
         print('Use default outputfile ')              
     # run replacement 
     run(inputfile,mode,outputfile)
