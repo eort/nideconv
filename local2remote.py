@@ -24,17 +24,17 @@ def run(inputfile,mode,outputfile):
 if __name__ == '__main__':
     # Check inputs
     try:
-        	inputfile = op.abspath(sys.argv[1]) 
+        inputfile = op.abspath(sys.argv[1]) 
     except IndexError:
         print('You need to specify configuration file for this analysis')
         sys.exit()   
     try:
-        	mode = sys.argv[2]
+        mode = sys.argv[2]
     except IndexError:
         mode = 'rem2loc'
         print('Convert to locale (default)')  
     try:
-        	outputfile = op.abspath(sys.argv[3]) 
+        outputfile = op.abspath(sys.argv[3]) 
     except IndexError:
         infile, extension = op.splitext(inputfile)
         outputfile = infile + '_'+ mode[-3:] + extension

@@ -13,6 +13,7 @@ import numpy as np
 import json
 import seaborn as sns
 
+
 def run(cfg):
     baseDir = cfg['baseDir']
     rawfiles = glob.glob(baseDir+'sub-*'+'/'+cfg["compDir"]+'/'+'*_comp.csv')
@@ -66,7 +67,10 @@ def run(cfg):
     switchPlot.set_xticklabels(['One Target Available','Both Targets Available'])
     sns.despine()
     fig = switchPlot.get_figure()
-    fig.savefig(os.path.join(cfg['baseDir'],cfg['plotDir'],"SC_behaviour.pdf"))
+    if not os.path.isfile(os.path.join(cfg['baseDir'],cfg['plotDir'],"SC_behaviour.pdf")):
+        fig.savefig(os.path.join(cfg['baseDir'],cfg['plotDir'],"SC_behaviour.pdf"))
+    else: 
+        fig.savefig(os.path.join(cfg['baseDir'],cfg['plotDir'],"SC_behaviour_%s.pdf"%np.random.randint(1000)))
     #sns.plt.show()
 if __name__ == '__main__':  
     try:

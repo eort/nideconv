@@ -73,6 +73,8 @@ def run(cfg):
         trial_data['switch_interval'] = trial_data.groupby(['subject_nr','block_no'])['switch','stim_on'].apply(eu.getInterval) # time between successive switches
         trial_data['dists'] = eu.findDist([trial_data['s1_x'],trial_data['s1_y']],[trial_data['s2_x'],trial_data['s2_y']],[trial_data['s3_x'],trial_data['s3_y']]).min(axis=0)
         trial_data['conflict'] = trial_data['dists']<90
+        trial_data['OffsetPrevTrial'] = trial_data.groupby(['subject_nr','block_no'])['t_off'].shift(1) # add previous trial offset to current trial
+        trial_data['corrITI'] = trial_data['stim_on'] - trial_data['OffsetPrevTrial'] # time between offset and onset of next trial
         raw_data = pd.merge(eye_data,trial_data,on=['subject_nr','run_no','block_no','trial_no'])
         
         raw_data["RT"] = pd.Series(raw_data.sacLatency,name = "RT")
