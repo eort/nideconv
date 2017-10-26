@@ -27,7 +27,8 @@ def run(cfg):
     except AssertionError: 
         baseDir = cfg['localeBaseDir'] # root directory on server
     template = op.join(baseDir,cfg['templateDir'],cfg['templateFSF']) # template fsf file
-    ID = cfg['ID'] # Key phrase of analysis that should be run
+    ID = cfg['analID'] # Key phrase of analysis that should be run
+    EVENTID = cfg['eventID'] # Key phrase of the events that should be used in analysis
     fsfDir = op.join(baseDir,cfg['fsfDir']) # Dir of newly created fsf files
     modelDir = op.join(baseDir,cfg['modelDir']) # Dir for newly created submit files
     templateSubmit = op.join(baseDir,cfg['templateDir'],cfg['templateSubmit']) # template submit file
@@ -64,7 +65,7 @@ def run(cfg):
             # define the output fsf filename
             outfile = op.join(fsfDir%(SUB,ID),'sub-%02d_run-%02d_%s.fsf'%(SUB,RUN,ID))
             # make fsf files
-            os.system('sed -e "s/##SUB##/%02d/g; s/##RUN##/%02d/g" < %s > %s'%(SUB,RUN,template,outfile))
+            os.system('sed -e "s/##SUB##/%02d/g; s/##RUN##/%02d/g; s/##ID##/%s/g;  s/##EVENTID##/%s/g " < %s > %s'%(SUB,RUN,ID,EVENTID,template,outfile))
             # add fsf file to submit file
             with open(submitfile, 'a') as out:
                 out.write("\narguments = sub-%02d/fsf/%s/sub-%02d_run-%02d_%s.fsf\n"%(SUB,ID,SUB,RUN,ID))
@@ -73,17 +74,6 @@ def run(cfg):
         if cfg['execute']:
             os.system("condor_submit %s"%submitfile)
         print('Finished participant %02d'%SUB)
-
-"""
-STUFF NEEDED FOR LEVEL 2
-            if [SUB,RUN] in emptyRuns:
-                continue
-    emptyEVfile = op.join(baseDir,'generalInfo',cfg['emptyRuns'])
-    emptyRuns = []
-    with open(emptyEVfile, 'r') as infile:
-		for idx,l in enumerate(infile):
-			emptyRuns.append(io.str2list(l)[:2])
-"""
 
 if __name__== '__main__':
     try:

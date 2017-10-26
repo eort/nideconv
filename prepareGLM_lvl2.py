@@ -84,8 +84,10 @@ def run(cfg):
                         goodRuns.remove(int(r[0]))
                     except:
                         print 'RUN %s already removed'%r
-            
-            template = op.join(baseDir,cfg['templateDir'],cfg['templateFSF_%s'%len(goodRuns)]) # template fsf file
+            try:
+                template = op.join(baseDir,cfg['templateDir'],cfg['templateFSF_%s'%len(goodRuns)]) # template fsf file
+            except KeyError as e:
+                print 'TOO MANY RUNS WOULD BE REMOVED!!!'
             # define the output fsf filename
             outfile = op.join(fsfDir%(SUB,ID),'sub-%02d_cope-%02d_%s.fsf'%(SUB,COPE,ID))
             # make fsf files
