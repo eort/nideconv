@@ -26,13 +26,13 @@ def run(cfg):
     except AssertionError: 
         baseDir = cfg['localeBaseDir'] # root directory on server
 
-    ID = cfg['ID'] # Key phrase of analysis that should be run
+    ID = cfg['analID'] # Key phrase of analysis that should be run
     nCopes = cfg['nCopes'] # How many contrasts are there
     fsfDir = op.join(baseDir,cfg['fsfDir']) # Dir of newly created fsf files
     infoDir = op.join(baseDir,cfg['infoDir']) # Dir of newly created fsf files
     modelDir = op.join(baseDir,cfg['modelDir']) # Dir for newly created submit files
     templateSubmit = op.join(baseDir,cfg['templateDir'],cfg['templateSubmit']) # template submit file
-    
+
     # load file with subject numbers and run numbers per subject
     runsPerSubjectFile = op.join(infoDir,cfg['runsPerSubject']) # filename
     runsPerSubject = dict() # init container
@@ -62,17 +62,19 @@ def run(cfg):
         # First skip bad subjects
         if SUB in cfg['excl_subj']:
             continue
+        subModelDir = op.join(modelDir%SUB,'2ndlvl/%s'%ID)
+
         # create output directory if not yet existent
-        if not op.exists(modelDir%(SUB)): # submit dir
-            print('Creating new folder %s'%(modelDir%(SUB)))
-            os.system("mkdir %s"%(modelDir%(SUB)))
+        if not op.exists(subModelDir): # submit dir
+            os.makedirs(subModelDir)
+            print('Creating new folder %s'%(subModelDir))
         if not op.exists(fsfDir%(SUB,ID)): # submit dir
             print('Creating new folder %s'%(fsfDir%(SUB,ID)))
-            os.system("mkdir %s"%(fsfDir%(SUB,ID)))
+            os.makedirs(fsfDir%(SUB, ID))
         # copy submit template to subject specific dir
         submitfile = op.join(modelDir%SUB,'sub-%02d_%s_2ndlvl.submit'%(SUB,ID))
-        os.system('sed -e "s/##SUB##/%02d/g" < %s > %s'%(SUB,templateSubmit,submitfile))
-              
+        os.system('sed -e "s/##SUB##/%02d/g ; s/##ID##/%s/g" < %s > %s'%(SUB,ID,templateSubmit,submitfile))
+
         # loop over runs and create fsf files
         for COPE in range(1,nCopes+1):
             goodRuns = range(1,runsPerSubject[SUB]+1)
@@ -96,7 +98,7 @@ def run(cfg):
                 os.system('sed -i "s/##RUN%s##/%02d/g" %s'%(idx,RUN,outfile))
             # add fsf file to submit file
             with open(submitfile, 'a') as out:
-                out.write("\narguments = sub-%02d/fsf/2ndlvl/%s/sub-%02d_cope-%02d_%s.fsf\n"%(SUB,ID,SUB,COPE,ID))
+                out.write("\narguments = scratch/sub-%02d/fsf/2ndlvl/%s/sub-%02d_cope-%02d_%s.fsf\n"%(SUB,ID,SUB,COPE,ID))
                 out.write("queue")
         # if wished submit jobs to condor
         if cfg['execute']:

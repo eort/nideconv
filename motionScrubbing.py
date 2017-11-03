@@ -56,7 +56,7 @@ if __name__ == '__main__':
     try:
         parentDir = op.abspath(sys.argv[1])
     except IndexError as e:
-        parentDir = '/home/data/exppsy/ora_Amsterdam'
+        parentDir = '/home/data/foraging/'
         print('Use default path %s'%parentDir)
     try:
         subNo = int(sys.argv[2])

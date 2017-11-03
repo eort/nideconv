@@ -15,7 +15,7 @@ def run(key,outfile,mode,conv= True ):
 				1:DM,2:MC,3:Reg,4:DM,MC,5:DM,REG,6:REG,MC,7:All
 	conv:		Want to convert the file to locale? 1,0
 	"""
-	all_feats = glob.glob('/home/data/exppsy/ora_Amsterdam/sub*/models/1stlvl/*%s.feat/'%key)
+	all_feats = glob.glob('/home/data/foraging/scratch/sub*/models/1stlvl/*%s.feat/'%key)
 	all_feats.sort()
 
 	with open(outfile, 'w') as out:    
@@ -53,7 +53,7 @@ if __name__ == '__main__':
 	try:
 		outfile = op.abspath(sys.argv[2])
 	except IndexError as e:
-		outfile = '/home/data/exppsy/ora_Amsterdam/QA/QA_lvl1_%s.html'%featkey
+		outfile = '/home/data/exppsy/ora_Amsterdamforaging/QA/QA_lvl1_%s.html'%featkey
 	try:
 		mode = int(sys.argv[3])
 		try: assert mode in range(1,8)

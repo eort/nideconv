@@ -17,7 +17,7 @@ def run(evkey,outfile,th =2):
 		os.remove(outfile)
 	except:
 		pass
-	all_events = glob.glob('/home/data/exppsy/ora_Amsterdam/sub*/func/%s/*.tsv'%evkey)
+	all_events = glob.glob('/home/data/foraging/sub*/func/%s/*.tsv'%evkey)
 	all_events.sort()
 	for f in all_events:
 		with open(f, 'r') as infile:
@@ -43,8 +43,8 @@ if __name__ == '__main__':
 		th = 2
 
 	try:
-		outfile = op.join('/home/data/exppsy/ora_Amsterdam/generalInfo/',sys.argv[3])
+		outfile = op.join('/home/data/foraging/generalInfo/',sys.argv[3])
 	except IndexError as e:
-		outfile = '/home/data/exppsy/ora_Amsterdam/generalInfo/emptyEVs_%s_th-%s.tsv'%(evkey,th)
+		outfile = '/home/data/foraging/generalInfo/emptyEVs_%s_th-%s.tsv'%(evkey,th)
 
 	run(evkey,outfile,th)

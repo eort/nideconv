@@ -11,7 +11,7 @@ import subprocess
 try:
     path = os.path.abspath(sys.argv[1])
 except:
-    path = '/home/data/exppsy/ora_amsterdam'
+    path = '/home/data/foraging'
     print("use default path as no other path was specified")
 try: nvol = sys.argv[2]
 except: nvol=210 # How many volumes do I expect?

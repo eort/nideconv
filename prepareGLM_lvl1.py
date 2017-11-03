@@ -68,7 +68,7 @@ def run(cfg):
             os.system('sed -e "s/##SUB##/%02d/g; s/##RUN##/%02d/g; s/##ID##/%s/g;  s/##EVENTID##/%s/g " < %s > %s'%(SUB,RUN,ID,EVENTID,template,outfile))
             # add fsf file to submit file
             with open(submitfile, 'a') as out:
-                out.write("\narguments = sub-%02d/fsf/%s/sub-%02d_run-%02d_%s.fsf\n"%(SUB,ID,SUB,RUN,ID))
+                out.write("\narguments = scratch/sub-%02d/fsf/%s/sub-%02d_run-%02d_%s.fsf\n"%(SUB,ID,SUB,RUN,ID))
                 out.write("queue")
         # if wished submit jobs to condor
         if cfg['execute']:

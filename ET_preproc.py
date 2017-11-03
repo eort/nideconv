@@ -30,8 +30,9 @@ def run(cfg):
     #filePatt = re.compile(baseDir)
     #eyefiles = [f for root, subFolders, files in os.walk(baseDir) if filePatt.match(files)]
     eyefiles = glob.glob(baseDir+'sub-*'+'/'+cfg["eyeDir"]+'/'+'*_edf.csv')
-    csvfiles = glob.glob(baseDir+'sub-*'+'/'+cfg["behavDir"]+'/'+'*.csv')
+    csvfiles = glob.glob(baseDir+cfg["behavDir"]+'/'+'sub-*'+'/'+'*.csv')
     eyefiles.sort();csvfiles.sort()
+    shell()
 
 
     ##################################################

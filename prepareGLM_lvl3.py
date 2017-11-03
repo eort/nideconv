@@ -25,7 +25,7 @@ def run(cfg):
     except AssertionError: 
         baseDir = cfg['localeBaseDir'] # root directory on server
 
-    ID = cfg['ID'] # Key phrase of analysis that should be run
+    ID = cfg['analID'] # Key phrase of analysis that should be run
     nCopes = cfg['nCopes'] # How many contrasts are there
     fsfDir = op.join(baseDir,cfg['fsfDir']%ID) # Dir of newly created fsf files
     template = op.join(baseDir,cfg['templateDir'],cfg['templateFSF']) # template fsf file
@@ -39,8 +39,8 @@ def run(cfg):
     """""""""""""""""""""""""""
     # copy submit template to subject specific dir
     submitfile = op.join(fsfDir,'3rdlvl_%s.submit'%ID)
-    os.system('cp %s %s'%(templateSubmit,submitfile))
-       
+    os.system('sed -e "s/##SUB##/%s/g" < %s > %s'%('group_level',templateSubmit,submitfile))
+   
 
     for COPE in range(1,nCopes+1):
         # define the output fsf filename
@@ -48,7 +48,7 @@ def run(cfg):
         os.system('sed -e "s/##ID##/%s/g; s/##COPE##/%d/g" < %s > %s'%(ID,COPE,template,outfile))
         # add fsf file to submit file
         with open(submitfile, 'a') as out:
-            out.write("\narguments = group_level/%s/feats/%s_cope-%d.fsf\n"%(ID,ID,COPE))
+            out.write("\narguments = scratch/group_level/%s/feats/%s_cope-%d.fsf\n"%(ID,ID,COPE))
             out.write("queue")
         # if wished submit jobs to condor
     if cfg['execute']:

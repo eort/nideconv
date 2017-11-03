@@ -61,11 +61,10 @@ sample_spacing = (1. / sampling_rate) * 1000  # in ms
 # collect samples from file
 ppu = []
 resp = []
-ppu2 = []
-resp2 = []
-triggers = []
+triggers = [] # Eduard
 start_mark = False
 end_mark = False
+timepoint = []
 
 # every line in the file (compressed files supported)
 for i, line in enumerate(
@@ -76,44 +75,63 @@ for i, line in enumerate(
         # ignore comment lines
         continue
     s = line.split()
-    mark = int(s[mark_column])
+    mark = int(s[mark_column]) 
     # detect the start mark -- everythin before that is pointless
     if mark == 10:
+        startmark = i
         print('STARTMARK at line %i' % i, file=sys.stderr)
         start_mark = True
     # detect the end mark -- everything after that is ignored
     elif start_mark and mark == 20:
         print('ENDMARK at line %i' % i, file=sys.stderr)
         end_mark = True
+        endmark = i
     if not start_mark:
         # until we have the start mark, stop here
         continue
     # all values are INTs
-    triggers.append(1) if mark > 999 else triggers.append(0)
-    ppu.append(int(s[ppu_column]))
+    timepoint.append(i) # Eduard
+    triggers.append(1) if mark > 999 else triggers.append(0) # Eduard
+    ppu.append(int(s[ppu_column])) 
     resp.append(int(s[resp_column]))
     # ignore end of file after scan stopped
     if end_mark:
         break
 
 # convert to numpy array
-data = np.zeros((len(ppu), 3), dtype=int)
+data = np.zeros((len(ppu), 4), dtype=int)
 data[:, 1] = ppu
 data[:, 2] = resp
-data2 = np.column_stack((triggers,ppu,resp))
+data[:, 3] = timepoint
+data2 = np.column_stack((triggers,ppu,resp,timepoint)) # Eduard
 
 # fill in trigger marks, starting at the end
 for i in range(nvolumes):
     trigger_loc = int(round(((i + 1) * tr) / sample_spacing)) + 1
+    #if i == 0: 
+    #    trigger_loc = 1230
     data[-trigger_loc, 0] = 1
 # truncate file to start and end of scan
 data = data[-trigger_loc:]
-data2 = data2[np.where(data2[:,0]==1)[0][0]:]
+data2 = data2[np.where(data2[:,0]==1)[0][0]:] # Eduard
 # sanity check
 assert(np.sum(data[:, 0]) == nvolumes)
-assert(np.sum(data2[:, 0]) == nvolumes)
+assert(np.sum(data2[:, 0]) == nvolumes) # Eduard
 # store
+#triggerNEW = np.where(data2[:,0]==1)[0]
 
-shell()
-np.savetxt(outfilename, data, fmt='%i')
-np.savetxt("s_"+outfilename, data2, fmt='%i')
+#triggerOLD = np.where(data[:,0]==1)[0]
+
+#timeIdxNEW = []
+#timeIdxOLD = []
+#for i in range(nvolumes-1):
+#    timeIdxNEW.append(triggerNEW[i +1] - triggerNEW[i ])
+#    timeIdxOLD.append(triggerOLD[i +1] - triggerOLD[i ])
+#timeIdxNEW.append(endmark - triggerNEW[-1]-startmark)
+#timeIdxOLD.append(endmark - triggerOLD[-1]-startmark)
+#print(timeIdxOLD)
+#print(timeIdxNEW)
+
+#np.savetxt(outfilename, data, fmt='%i')
+#np.savetxt("s_"+outfilename, data2, fmt='%i') # Eduard
+ 

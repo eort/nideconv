@@ -13,11 +13,11 @@ from IPython import embed as shell
 def run(inputfile,mode,outputfile):
     # set what to replace with what
     if mode == 'rem2loc':
-        key = '/home/data/exppsy/ora_Amsterdam/'
-        repl = '/run/user/1000/gvfs/sftp:host=medusa.ovgu.de,user=ort/home/data/exppsy/ora_Amsterdam/'
+        key = '/home/data/foraging/'
+        repl = '/run/user/1000/gvfs/sftp:host=medusa.ovgu.de,user=ort/home/data/foraging/'
     elif mode == 'loc2rem':
-        repl = '/home/data/exppsy/ora_Amsterdam/'
-        key = '/run/user/1000/gvfs/sftp:host=medusa.ovgu.de,user=ort/home/data/exppsy/ora_Amsterdam/'
+        repl = '/home/data/foraging/'
+        key = '/run/user/1000/gvfs/sftp:host=medusa.ovgu.de,user=ort/home/data/foraging/'
     # use command line sed to do conversion
     os.system('sed -e "s~%s~%s~g" < %s > %s'%(key,repl,inputfile,outputfile))
             
