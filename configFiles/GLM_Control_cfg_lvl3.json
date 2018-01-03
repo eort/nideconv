@@ -1,0 +1,13 @@
+{
+	"root":".",
+	"baseDir":"/home/data/foraging/",
+	"templateDir": "templates",
+	"fsfDir": "scratch/group_level/%s/feats",
+	"templateFSF":"3rdlvl.fsf",
+	"templateSubmit":"glm_template3rdlvl.submit",
+	"analID":"Control",
+	"eventID":"FreeChoiceME",
+	"nCopes":22,
+	"execute":1,
+	"localeBaseDir":"/run/user/1000/gvfs/sftp:host=medusa.ovgu.de,user=ort/home/data/foraging/"
+}

@@ -1,0 +1,12 @@
+{
+	"root":".",
+	"baseDir":"/home/data/foraging/",
+	"excl_sub":[18,20,24],
+	"compDir":"ready",
+	"eventDir":"func",
+    "fixatedTarget":"fixatedStim",
+    "analID":"FreeChoiceME",
+    "evOnset":"stim_on",
+    "evDur":"RT",
+    "events":["reSwitchTD","reRepTD","proSwitchTD","proRepTD","reSwitchDD","reRepDD","proSwitchDD","proRepDD","error","cue","firstFix","secondFix"]
+}
