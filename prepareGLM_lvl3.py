@@ -27,6 +27,7 @@ def run(cfg):
 
     ID = cfg['analID'] # Key phrase of analysis that should be run
     nCopes = cfg['nCopes'] # How many contrasts are there
+    inputCopes = cfg['inputCopes']
     fsfDir = op.join(baseDir,cfg['fsfDir']%ID) # Dir of newly created fsf files
     template = op.join(baseDir,cfg['templateDir'],cfg['templateFSF']) # template fsf file
     templateSubmit = op.join(baseDir,cfg['templateDir'],cfg['templateSubmit']) # template submit file
@@ -39,18 +40,29 @@ def run(cfg):
     """""""""""""""""""""""""""
     # copy submit template to subject specific dir
     submitfile = op.join(fsfDir,'3rdlvl_%s.submit'%ID)
-    os.system('sed -e "s/##SUB##/%s/g" < %s > %s'%('group_level',templateSubmit,submitfile))
-   
-
-    for COPE in range(1,nCopes+1):
-        # define the output fsf filename
-        outfile = op.join(fsfDir,'%s_cope-%d.fsf'%(ID,COPE))
-        os.system('sed -e "s/##ID##/%s/g; s/##COPE##/%d/g" < %s > %s'%(ID,COPE,template,outfile))
+    os.system('cp %s %s'%(templateSubmit,submitfile))
+    if cfg['method'] == 'old':
+        for COPE in range(1,nCopes+1):
+            # define the output fsf filename
+            outfile = op.join(fsfDir,'%s_cope-%d.fsf'%(ID,COPE))
+            os.system('sed -e "s/##ID##/%s/g; s/##COPE##/%d/g" < %s > %s'%(ID,COPE,template,outfile))
+            # add fsf file to submit file
+            with open(submitfile, 'a') as out:
+                out.write("\narguments = scratch/group_level/%s/feats/%s_cope-%d.fsf\n"%(ID,ID,COPE))
+                out.write("queue")
+    elif cfg['method'] == 'new':
+        outfile = op.join(fsfDir,'%s.fsf'%ID)
+        os.system('cp %s %s'%(template,outfile))
+        for COPE in range(1,inputCopes+1):
+            # define the output fsf filename
+            os.system('sed -i "s/##ID##/%s/g; s/##COPE%d##/%d/g" %s'%(ID,COPE,COPE,outfile))
         # add fsf file to submit file
         with open(submitfile, 'a') as out:
-            out.write("\narguments = scratch/group_level/%s/feats/%s_cope-%d.fsf\n"%(ID,ID,COPE))
+            out.write("\narguments = scratch/group_level/%s/feats/%s.fsf\n"%(ID,ID))
             out.write("queue")
-        # if wished submit jobs to condor
+
+
+    # if wished submit jobs to condor
     if cfg['execute']:
         os.system("condor_submit %s"%submitfile)
     print('Finished')

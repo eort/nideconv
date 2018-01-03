@@ -27,12 +27,17 @@ def run(cfg):
         baseDir = cfg['localeBaseDir'] # root directory on server
 
     ID = cfg['analID'] # Key phrase of analysis that should be run
-    nCopes = cfg['nCopes'] # How many contrasts are there
+    try: 
+        copes = cfg['copes'] # How many contrasts are there
+    except KeyError: 
+        nCopes = cfg['nCopes'] # How many contrasts are there
+        copes = range(1,nCopes+1)
     fsfDir = op.join(baseDir,cfg['fsfDir']) # Dir of newly created fsf files
     infoDir = op.join(baseDir,cfg['infoDir']) # Dir of newly created fsf files
     modelDir = op.join(baseDir,cfg['modelDir']) # Dir for newly created submit files
     templateSubmit = op.join(baseDir,cfg['templateDir'],cfg['templateSubmit']) # template submit file
-
+    FIR_TR = cfg['FIR_TR']
+    FIR_Factor = cfg['FIR_Factor']
     # load file with subject numbers and run numbers per subject
     runsPerSubjectFile = op.join(infoDir,cfg['runsPerSubject']) # filename
     runsPerSubject = dict() # init container
@@ -76,7 +81,7 @@ def run(cfg):
         os.system('sed -e "s/##SUB##/%02d/g ; s/##ID##/%s/g" < %s > %s'%(SUB,ID,templateSubmit,submitfile))
 
         # loop over runs and create fsf files
-        for COPE in range(1,nCopes+1):
+        for COPE in copes:
             goodRuns = range(1,runsPerSubject[SUB]+1)
             badRuns = emptyRuns['%02d'%SUB]
             requiredEV = copeDepend['%s'%COPE]
@@ -94,6 +99,9 @@ def run(cfg):
             outfile = op.join(fsfDir%(SUB,ID),'sub-%02d_cope-%02d_%s.fsf'%(SUB,COPE,ID))
             # make fsf files
             os.system('sed -e "s/##ID##/%s/g;s/##SUB##/%02d/g; s/##COPE##/%d/g" < %s > %s'%(ID,SUB,COPE,template,outfile))
+            for c in range(1,FIR_TR+1):
+                FIRCOPE = FIR_Factor*(COPE-1) + c 
+                os.system('sed -i "s/##FIRCOPE%d##/%d/g" %s '%(c,FIRCOPE,outfile))  
             for idx,RUN in enumerate(goodRuns,1):
                 os.system('sed -i "s/##RUN%s##/%02d/g" %s'%(idx,RUN,outfile))
             # add fsf file to submit file
@@ -101,6 +109,7 @@ def run(cfg):
                 out.write("\narguments = scratch/sub-%02d/fsf/2ndlvl/%s/sub-%02d_cope-%02d_%s.fsf\n"%(SUB,ID,SUB,COPE,ID))
                 out.write("queue")
         # if wished submit jobs to condor
+        shell()
         if cfg['execute']:
             os.system("condor_submit %s"%submitfile)
         print('Finished participant %02d'%SUB)

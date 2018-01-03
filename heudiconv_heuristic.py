@@ -32,6 +32,7 @@ def infotodict(seqinfo):
         elif 'T1W_' in s[2]:
             key = create_key('anat/{subject}_T1w')
 	elif 'ScreenCapture' in s[2]:
+        print("What is ScreenCapture supposed to be?")
 	    continue
         else:
             print s[2]

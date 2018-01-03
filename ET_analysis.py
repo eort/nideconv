@@ -18,6 +18,7 @@ def run(cfg):
     baseDir = cfg['baseDir']
     rawfiles = glob.glob(baseDir+'sub-*'+'/'+cfg["compDir"]+'/'+'*_comp.csv')
     raw_data = pd.concat([pd.read_csv(f,header=0,index_col = None) for f in rawfiles],ignore_index=True)
+    writepath = os.path.join(baseDir,cfg['plotDir'],'cleanData.csv')
     ##################################################
     #Select clean trials
     ##################################################
@@ -39,7 +40,9 @@ def run(cfg):
     clean_data = raw.loc[firstSacIdx & tarDirectedSacIdx & practiceIdx &\
           firstTrialIdx & missIdx & outlierIdx & RTIdx &\
           conflictIdx & accIdx & nanIdx & badSubjIdx]
-    
+    # write cleaned file
+    #clean_data.to_csv(writepath,index=False,na_rep="nan")     
+
     ##################################################
     #Analysis1
     ##################################################    

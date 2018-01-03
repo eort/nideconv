@@ -65,11 +65,13 @@ def run(cfg):
             # define the output fsf filename
             outfile = op.join(fsfDir%(SUB,ID),'sub-%02d_run-%02d_%s.fsf'%(SUB,RUN,ID))
             # make fsf files
+            
             os.system('sed -e "s/##SUB##/%02d/g; s/##RUN##/%02d/g; s/##ID##/%s/g;  s/##EVENTID##/%s/g " < %s > %s'%(SUB,RUN,ID,EVENTID,template,outfile))
             # add fsf file to submit file
             with open(submitfile, 'a') as out:
                 out.write("\narguments = scratch/sub-%02d/fsf/%s/sub-%02d_run-%02d_%s.fsf\n"%(SUB,ID,SUB,RUN,ID))
                 out.write("queue")
+
         # if wished submit jobs to condor
         if cfg['execute']:
             os.system("condor_submit %s"%submitfile)
@@ -88,4 +90,5 @@ if __name__== '__main__':
         print "The provided file does not exist. Either put a default .json file "\
         "in the directory of this script, or provide a valid file in the command line."
         sys.exit()
+
     run(cfg)
