@@ -137,14 +137,14 @@ set fmri(motionevsbeta) ""
 set fmri(scriptevsbeta) ""
 
 # Robust outlier detection in FLAME?
-set fmri(robust_yn) 0
+set fmri(robust_yn) 1
 
 # Higher-level modelling
 # 3 : Fixed effects
 # 0 : Mixed Effects: Simple OLS
 # 2 : Mixed Effects: FLAME 1
 # 1 : Mixed Effects: FLAME 1+2
-set fmri(mixed_yn) 2
+set fmri(mixed_yn) 1
 
 # Number of EVs
 set fmri(evs_orig) 1
@@ -176,10 +176,10 @@ set fmri(threshmask) ""
 set fmri(thresh) 3
 
 # P threshold
-set fmri(prob_thresh) 0.05
+set fmri(prob_thresh) 0.001
 
 # Z threshold
-set fmri(z_thresh) 2.3
+set fmri(z_thresh) 3.1
 
 # Z min/max for colour rendering
 # 0 : Use actual Z min/max
@@ -263,61 +263,61 @@ set fmri(paradigm_hp) 100
 set fmri(ncopeinputs) 0
 
 # 4D AVW data or FEAT directory (1)
-set feat_files(1) "/home/data/foraging/scratch/sub-01/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(1) "/home/data/foraging/scratch/sub-01/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (2)
-set feat_files(2) "/home/data/foraging/scratch/sub-02/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(2) "/home/data/foraging/scratch/sub-02/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (3)
-set feat_files(3) "/home/data/foraging/scratch/sub-03/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(3) "/home/data/foraging/scratch/sub-03/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (4)
-set feat_files(4) "/home/data/foraging/scratch/sub-04/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(4) "/home/data/foraging/scratch/sub-04/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (5)
-set feat_files(5) "/home/data/foraging/scratch/sub-05/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(5) "/home/data/foraging/scratch/sub-05/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (6)
-set feat_files(6) "/home/data/foraging/scratch/sub-06/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(6) "/home/data/foraging/scratch/sub-06/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (7)
-set feat_files(7) "/home/data/foraging/scratch/sub-07/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(7) "/home/data/foraging/scratch/sub-07/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (8)
-set feat_files(8) "/home/data/foraging/scratch/sub-08/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(8) "/home/data/foraging/scratch/sub-08/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (9)
-set feat_files(9) "/home/data/foraging/scratch/sub-09/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(9) "/home/data/foraging/scratch/sub-09/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (10)
-set feat_files(10) "/home/data/foraging/scratch/sub-10/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(10) "/home/data/foraging/scratch/sub-10/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (11)
-set feat_files(11) "/home/data/foraging/scratch/sub-11/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(11) "/home/data/foraging/scratch/sub-11/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (12)
-set feat_files(12) "/home/data/foraging/scratch/sub-12/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(12) "/home/data/foraging/scratch/sub-12/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (13)
-set feat_files(13) "/home/data/foraging/scratch/sub-13/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(13) "/home/data/foraging/scratch/sub-13/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (14)
-set feat_files(14) "/home/data/foraging/scratch/sub-14/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(14) "/home/data/foraging/scratch/sub-14/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (15)
-set feat_files(15) "/home/data/foraging/scratch/sub-15/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(15) "/home/data/foraging/scratch/sub-15/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (16)
-set feat_files(16) "/home/data/foraging/scratch/sub-16/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(16) "/home/data/foraging/scratch/sub-16/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (17)
-set feat_files(17) "/home/data/foraging/scratch/sub-17/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(17) "/home/data/foraging/scratch/sub-17/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (18)
-set feat_files(18) "/home/data/foraging/scratch/sub-19/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(18) "/home/data/foraging/scratch/sub-19/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # 4D AVW data or FEAT directory (19)
-set feat_files(19) "/home/data/foraging/scratch/sub-21/models/2ndlvl/##ID##_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
+set feat_files(19) "/home/data/foraging/scratch/sub-21/models/2ndlvl/Control_cope-##COPE##.gfeat/cope1.feat/stats/cope1.nii.gz"
 
 # Add confound EVs text file
 set fmri(confoundevs) 0

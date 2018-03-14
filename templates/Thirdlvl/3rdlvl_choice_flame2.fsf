@@ -30,7 +30,7 @@ set fmri(featwatcher_yn) 1
 set fmri(sscleanup_yn) 0
 
 # Output directory
-set fmri(outputdir) "/home/data/foraging/scratch/group_level/##ID##/cope-##COPE##"
+set fmri(outputdir) "/home/data/foraging/scratch/group_level/##OUTID##/##OUTID##"
 
 # TR(s)
 set fmri(tr) 3
@@ -137,14 +137,14 @@ set fmri(motionevsbeta) ""
 set fmri(scriptevsbeta) ""
 
 # Robust outlier detection in FLAME?
-set fmri(robust_yn) 0
+set fmri(robust_yn) 1
 
 # Higher-level modelling
 # 3 : Fixed effects
 # 0 : Mixed Effects: Simple OLS
 # 2 : Mixed Effects: FLAME 1
 # 1 : Mixed Effects: FLAME 1+2
-set fmri(mixed_yn) 2
+set fmri(mixed_yn) 1
 
 # Number of EVs
 set fmri(evs_orig) 4
@@ -176,10 +176,10 @@ set fmri(threshmask) ""
 set fmri(thresh) 3
 
 # P threshold
-set fmri(prob_thresh) 0.05
+set fmri(prob_thresh) 0.001
 
 # Z threshold
-set fmri(z_thresh) 2.3
+set fmri(z_thresh) 3.1
 
 # Z min/max for colour rendering
 # 0 : Use actual Z min/max

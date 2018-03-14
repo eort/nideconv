@@ -1,0 +1,50 @@
+universe = vanilla
+output = condor_logs/$(CLUSTER).$(PROCESS).out
+error = condor_logs/$(CLUSTER).$(PROCESS).err
+log = condor_logs/$(CLUSTER).$(PROCESS).log
+getenv = True
+request_cpus = 1
+request_memory = 4000
+should_transfer_files = NO
+transfer_executable = False
+initialdir = /home/data/foraging/
+executable = $(initialdir)/code/runSingularity_fmap.sh
+
+arguments  =  01
+queue 
+#arguments  =  02
+#queue 
+#arguments  =  03
+#queue 
+#arguments  =  04
+#queue 
+#arguments  =  05
+#queue 
+#arguments  =  06
+#queue 
+#arguments  =  07
+#queue 
+#arguments  =  08
+#queue 
+#arguments  =  09
+#queue 
+#arguments  =  10
+#queue 
+#arguments  =  11
+#queue 
+#arguments  =  12
+#queue 
+#arguments  =  13
+#queue 
+#arguments  =  14
+#queue 
+#arguments  =  15
+#queue 
+#arguments  =  16
+#queue 
+#arguments  =  17
+#queue
+#arguments  =  19
+#queue 
+#arguments  =  21
+#queue 
