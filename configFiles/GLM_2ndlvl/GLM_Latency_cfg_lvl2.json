@@ -16,7 +16,7 @@
 	"eventID":"FreeChoiceME",
 	"nCopes":22,
 	"copeDependencies":"COPE_EVs_%s.tsv" ,
-	"execute":0,
+	"execute":1,
 	"FIR_TR":0,
 	"FIR_Factor":0,
 	"modelDir":"scratch/sub-%02d/models",

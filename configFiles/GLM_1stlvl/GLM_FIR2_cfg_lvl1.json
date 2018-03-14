@@ -8,7 +8,7 @@
 	"templateSubmit":"glm_template.submit",
 	"analID":"FIR2",
 	"eventID":"FreeChoiceME",
-	"execute":0,
+	"execute":1,
 	"modelDir":"scratch/sub-%02d/models",
 	"runsPerSubject":"runsPerSubject.tsv",
 	"localeBaseDir":"/run/user/1000/gvfs/sftp:host=medusa.ovgu.de,user=ort/home/data/foraging/scratch/"
