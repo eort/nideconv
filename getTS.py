@@ -66,7 +66,7 @@ for sub in range(len(subs)):
 pl.setp(axes,xticks = xaxis,xticklabels = xaxis)
 pl.figlegend(tuple(plots),cond,'upper right')
 f.tight_layout()
-f.savefig('HRF_individual.pdf')
+f.savefig('scratch/results/HRF_individual.pdf')
 
 
 # individual difference plots
@@ -94,7 +94,7 @@ for sub in range(len(subs)):
 pl.setp(axes,xticks = xaxis,xticklabels = xaxis)
 pl.figlegend(tuple(plots),cond,'upper right')
 f.tight_layout()
-f.savefig('HRF_individual_diffWav.pdf')
+f.savefig('scratch/results/HRF_individual_diffWav.pdf')
 # group
 
 f,axes = pl.subplots(1,noMasks,sharex=True)
@@ -103,7 +103,7 @@ f.set_figheight(4)
 xaxis = np.arange(-2,18,2)
 
 col = ['r--','y--','b--','g--']
-cond = ['reR','reS','proS','proR']
+cond = ['proS','reS','proR','reR']
 #for aI,ax in enumerate(axes):
 for aI,ax in enumerate(axes):
 	plots = []
@@ -117,7 +117,7 @@ for aI,ax in enumerate(axes):
 pl.setp(axes,xticks = xaxis,xticklabels = xaxis)
 pl.figlegend(tuple(plots),cond,'upper right')
 f.tight_layout()
-f.savefig('HRF_group.pdf')
+f.savefig('scratch/results/HRF_group.pdf')
 
 # group diffwave
 f,axes = pl.subplots(1,noMasks,sharex=True)
@@ -142,4 +142,4 @@ for aI,ax in enumerate(axes):
 pl.setp(axes,xticks = xaxis,xticklabels = xaxis)
 pl.figlegend(tuple(plots),cond,'upper right')
 f.tight_layout()
-f.savefig('HRF_group_diffWav.pdf')
+f.savefig('scratch/results/HRF_group_diffWav.pdf')

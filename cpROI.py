@@ -5,19 +5,18 @@ import numpy as np
 import nibabel as nib
 #import nilearn.plotting
 from IPython import embed as shell
-import matplotlib.pylab as pl
 
 #baseDir = '/run/user/1000/gvfs/sftp:host=medusa.ovgu.de,user=ort/home/data/foraging/scratch'
 baseDir = '/home/data/foraging/scratch'
 copeDir = 'sub-%02d/models/2ndlvl/FIR/FIR_cope-%d.gfeat/cope1.feat'
 #exampleFuncDir = 'sub-%02d/models/1stlvl/sub-%02d-01_FIR.feat'
 maskDir = 'group_level/Control-31/cope-17.gfeat/masks'
-transformDir = 'sub-%02d/models/1stlvl/sub-%02d-01_FIR.feat/reg'
+transformDir = 'sub-%02d/models/1stlvl/sub-%02d-01_preprocess.feat/reg'
 outDir = 'sub-%02d/models/2ndlvl/FIR/masks'
 
 sampleSize = 19
 subs = range(1,18) +[19]+ [21]
-create_masks = 1
+
 # making masks
 masks = glob.glob(op.join(baseDir,maskDir) + '/*ready*')
 for sub in subs: 

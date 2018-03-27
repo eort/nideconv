@@ -25,7 +25,7 @@ def makeLog(data,cleanIdx,errorIdx,evOnset,evDur,event = None):
 			outFile.append([(block-start)*0.001,0.5,1])  
     elif event == 'cue':
         for block in data.CueOnsetTime.unique():
-			outFile.append([(block-start)*0.001,0.5,1])  
+			outFile.append([(block-start)*0.001,2.5,1])  
     elif event == 'proSwitch':
 		for index,row in clean_data.iterrows():
 			if row.df == 'free' and row.switch == True:

@@ -109,7 +109,6 @@ def run(cfg):
                 out.write("\narguments = scratch/sub-%02d/fsf/2ndlvl/%s/sub-%02d_cope-%02d_%s.fsf\n"%(SUB,ID,SUB,COPE,ID))
                 out.write("queue")
         # if wished submit jobs to condor
-        shell()
         if cfg['execute']:
             os.system("condor_submit %s"%submitfile)
         print('Finished participant %02d'%SUB)

@@ -30,7 +30,7 @@ import eyeUtils as eu
 def run(cfg):
     # read files
     baseDir = cfg['baseDir']
-    eyefiles = glob.glob(baseDir+'sub-*'+'/'+cfg["ascDir"]+'/'+'*.asc')
+    eyefiles = glob.glob(baseDir+'derivatives/sub-*/'+cfg["ascDir"]+'/*.asc')
     eyefiles.sort()
     
     prev_subject = np.nan
@@ -41,7 +41,7 @@ def run(cfg):
         except AssertionError as e:
             print e
             continue             
-        eyeDir = os.path.join(baseDir,'sub-%.2i'%int(ascf[4:6]),cfg['eyeDir'])
+        eyeDir = os.path.join(baseDir,'derivatives','sub-%.2i'%int(ascf[4:6]),cfg['eyeDir'])
         io.makeDirs(eyeDir)
         writepath = os.path.join(eyeDir,ascf[:-4]+'_edf.csv') #outpath 
         
@@ -60,8 +60,6 @@ def run(cfg):
                 curBlockNo = cfg["block_start"]
         else:
             subject_nr = ascf[:2] 
-            
-        print "start parsing subject", ascf
         
         trials = []
         block_no = curBlockNo
@@ -167,7 +165,7 @@ def run(cfg):
         eye_df = pd.DataFrame(trials)
         # write file to csv
         eye_df.to_csv(writepath,index=False,na_rep="nan")     
-        print "finished parsing subject", ascf   
+        print("finished parsing subject", ascf) 
 
 if __name__ == '__main__':  
     if len(sys.argv)<2:

@@ -26,8 +26,11 @@ def run(cfg):
         baseDir = cfg['localeBaseDir'] # root directory on server
 
     ID = cfg['analID'] # Key phrase of analysis that should be run
-    nCopes = cfg['nCopes'] # How many contrasts are there
-    inputCopes = cfg['inputCopes']
+    OUTID = cfg['outID'] # Key phrase of analysis that should be run
+    if cfg['method'] == 'old':
+        nCopes = cfg['nCopes'] # How many contrasts are there
+    else:
+        inputCopes = cfg['inputCopes']
     fsfDir = op.join(baseDir,cfg['fsfDir']%ID) # Dir of newly created fsf files
     template = op.join(baseDir,cfg['templateDir'],cfg['templateFSF']) # template fsf file
     templateSubmit = op.join(baseDir,cfg['templateDir'],cfg['templateSubmit']) # template submit file
@@ -45,7 +48,7 @@ def run(cfg):
         for COPE in range(1,nCopes+1):
             # define the output fsf filename
             outfile = op.join(fsfDir,'%s_cope-%d.fsf'%(ID,COPE))
-            os.system('sed -e "s/##ID##/%s/g; s/##COPE##/%d/g" < %s > %s'%(ID,COPE,template,outfile))
+            os.system('sed -e "s/##ID##/%s/g; s/##OUTID##/%s/g; s/##COPE##/%d/g" < %s > %s'%(ID,OUTID,COPE,template,outfile))
             # add fsf file to submit file
             with open(submitfile, 'a') as out:
                 out.write("\narguments = scratch/group_level/%s/feats/%s_cope-%d.fsf\n"%(ID,ID,COPE))
@@ -55,7 +58,7 @@ def run(cfg):
         os.system('cp %s %s'%(template,outfile))
         for COPE in range(1,inputCopes+1):
             # define the output fsf filename
-            os.system('sed -i "s/##ID##/%s/g; s/##COPE%d##/%d/g" %s'%(ID,COPE,COPE,outfile))
+            os.system('sed -i "s/##ID##/%s/g; s/##OUTID##/%s/g; s/##COPE%d##/%d/g" %s'%(ID,OUTID,COPE,COPE,outfile))
         # add fsf file to submit file
         with open(submitfile, 'a') as out:
             out.write("\narguments = scratch/group_level/%s/feats/%s.fsf\n"%(ID,ID))

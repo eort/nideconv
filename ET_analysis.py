@@ -16,9 +16,12 @@ import seaborn as sns
 
 def run(cfg):
     baseDir = cfg['baseDir']
-    rawfiles = glob.glob(baseDir+'sub-*'+'/'+cfg["compDir"]+'/'+'*_comp.csv')
+    rawfiles = glob.glob(baseDir+'derivatives/sub-*'+'/'+cfg["compDir"]+'/'+'*_comp.csv')
     raw_data = pd.concat([pd.read_csv(f,header=0,index_col = None) for f in rawfiles],ignore_index=True)
-    writepath = os.path.join(baseDir,cfg['plotDir'],'cleanData.csv')
+    writeDir = os.path.join(baseDir,'derivatives',cfg['plotDir'])
+    writepath = os.path.join(writeDir,'cleanData.csv')
+    if not os.path.exists(writeDir):
+        os.makedirs(writeDir)
     ##################################################
     #Select clean trials
     ##################################################
@@ -41,13 +44,15 @@ def run(cfg):
           firstTrialIdx & missIdx & outlierIdx & RTIdx &\
           conflictIdx & accIdx & nanIdx & badSubjIdx]
     # write cleaned file
-    #clean_data.to_csv(writepath,index=False,na_rep="nan")     
+    clean_data.to_csv(writepath,index=False,na_rep="nan")     
 
     ##################################################
     #Analysis1
     ##################################################    
+    #shell()
     print "Analysis 1"
     anal1 = clean_data.copy()
+
     Firstlvl1=anal1.groupby(['subject_nr','run_no','df','switch'])['RT'].agg([np.mean,np.std,np.size]).rename(columns = {'mean':'mRT','std':'sdRT','size':'count'}).reset_index()
     Secondlvl1=Firstlvl1.groupby(['subject_nr','df','switch'])['mRT','sdRT','count'].mean().reset_index()
     Thirdlvl1=Secondlvl1.groupby(['df','switch'])['mRT','sdRT','count'].mean().reset_index()
@@ -70,11 +75,23 @@ def run(cfg):
     switchPlot.set_xticklabels(['One Target Available','Both Targets Available'])
     sns.despine()
     fig = switchPlot.get_figure()
-    if not os.path.isfile(os.path.join(cfg['baseDir'],cfg['plotDir'],"SC_behaviour.pdf")):
-        fig.savefig(os.path.join(cfg['baseDir'],cfg['plotDir'],"SC_behaviour.pdf"))
+    if not os.path.isfile(os.path.join(writeDir,"SC_behaviour.pdf")):
+        fig.savefig(os.path.join(writeDir,"SC_behaviour.pdf"))
     else: 
-        fig.savefig(os.path.join(cfg['baseDir'],cfg['plotDir'],"SC_behaviour_%s.pdf"%np.random.randint(1000)))
+        fig.savefig(os.path.join(writeDir,"SC_behaviour_%s.pdf"%np.random.randint(1000)))
     #sns.plt.show()
+
+    # time between switches
+    print "Analysis 3"
+    anal3 = clean_data.copy()
+    anal3 = anal3.loc[anal3["switch"] == True]
+    anal3 = anal3.loc[anal3["df"] == 'forced']
+    Firstlvl1=anal3.groupby(['subject_nr','run_no','block_no','df','switch'])['switch_interval'].agg([np.mean,np.std,np.size]).rename(columns = {'mean':'mRT','std':'sdRT','size':'count'}).reset_index()
+    Secondlvl1=Firstlvl1.groupby(['subject_nr','df','switch'])['mRT','sdRT','count'].mean().reset_index()
+    Thirdlvl1=Secondlvl1.groupby(['df','switch'])['mRT','sdRT','count'].mean().reset_index()
+    print Firstlvl1
+    print Secondlvl1
+    print Thirdlvl1
 if __name__ == '__main__':  
     try:
         jsonfile = sys.argv[1]

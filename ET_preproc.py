@@ -29,10 +29,10 @@ def run(cfg):
     # read files
     #filePatt = re.compile(baseDir)
     #eyefiles = [f for root, subFolders, files in os.walk(baseDir) if filePatt.match(files)]
-    eyefiles = glob.glob(baseDir+'sub-*'+'/'+cfg["eyeDir"]+'/'+'*_edf.csv')
+    eyefiles = glob.glob(baseDir+'derivatives/sub-*'+'/'+cfg["eyeDir"]+'/'+'*_edf.csv')
     csvfiles = glob.glob(baseDir+cfg["behavDir"]+'/'+'sub-*'+'/'+'*.csv')
     eyefiles.sort();csvfiles.sort()
-    shell()
+    #shell()
 
 
     ##################################################
@@ -41,8 +41,7 @@ def run(cfg):
     include_col = cfg['relevantColumns'] # which columns of behaviour should be read
     for fIdx in range(len(eyefiles)):
         f = os.path.basename(eyefiles[fIdx])
-        print "Starting merging file: %s"%f
-        compDir = os.path.join(baseDir,'sub-%.2i'%int(f[4:6]),cfg['compDir'])
+        compDir = os.path.join(baseDir,'derivatives','sub-%.2i'%int(f[4:6]),cfg['compDir'])
         io.makeDirs(compDir)
         writepath = os.path.join(compDir,f[:-7]+'comp.csv') #outpath
 
@@ -99,7 +98,7 @@ def run(cfg):
         raw_data["block_no"].replace(-99,np.nan,inplace=True)
         # write final file per subject
         raw_data.to_csv(writepath,index=False,na_rep="nan")     
-        print "Merging file %s succesfully finished"%os.path.basename(eyefiles[fIdx])
+        print("Merging file %s succesfully finished"%os.path.basename(eyefiles[fIdx]))
 
 if __name__ == '__main__':  
     if len(sys.argv)<2:

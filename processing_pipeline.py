@@ -29,5 +29,5 @@ makeEvents = importlib.import_module(cfg['eventsScript'])
 # run scrips
 parseScript.run(cfg)
 preprocScript.run(cfg)
-makeEvents.run(cfg)
+#makeEvents.run(cfg)
 analysisScript.run(cfg)
