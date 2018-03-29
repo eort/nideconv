@@ -75,20 +75,22 @@ def makeLog(data,cleanIdx,errorIdx,evOnset,evDur,event = None):
             if row.df == 'forced' and row.switch == False and row.trial_type == 0:
                 outFile.append([(row[evOnset]-start)*0.001,row[evDur]*0.001,1])
     if len(outFile) == 0:
+        shell()
         outFile.append([0,0,0])
     return outFile
  
 def run(cfg):
     analID = cfg["analID"]
     baseDir = cfg['baseDir']
-    eyefiles = glob.glob(baseDir+'sub-*'+'/'+cfg["compDir"]+'/'+'*_comp.csv')
+    eyefiles = glob.glob(baseDir+'derivatives/sub-*'+'/'+cfg["compDir"]+'/'+'*_comp.csv')
     eyefiles.sort();
-
     for fIdx in range(len(eyefiles)):
+        if fIdx < 20:
+            continue
         f = os.path.basename(eyefiles[fIdx])
         print "Start file: %s"%f
         eventDir = os.path.join(baseDir,'sub-%.2i'%int(f[4:6]),cfg['eventDir'])
-        io.makeDirs(eventDir)
+        #io.makeDirs(eventDir)
         raw_data = pd.read_csv(eyefiles[fIdx],header=0,index_col = None)
         raw = raw_data.copy()
         badSubjIdx = raw.loc[~raw["subject_nr"].isin(cfg["excl_sub"])].index
@@ -117,14 +119,17 @@ def run(cfg):
             outFile = makeLog(raw,cleanIdx,errorIdx,cfg['evOnset'],cfg['evDur'],event)
             name = 'sub-%.2i-%.2i_'%(raw.subject_nr.iloc[0],raw.run_no.iloc[0]) + event + analID + '.tsv'
             eventfile = os.path.join(eventDir,analID,name)
+            """
             if not os.path.exists(os.path.dirname(eventfile)):
                     os.makedirs(os.path.dirname(eventfile))
-            with open(eventfile, "w") as txtfile:
+            
+            with open(eventfile, 'w') as txtfile:
                 for val in outFile:
                     if any([pd.isnull(value) for value in val]):
                         continue
-                    txtfile.write("%f\t%f\t%f \n"%(val[0], val[1], val[2] ))
+                    txtfile.write('%f\t%f\t%f \n'%(val[0], val[1], val[2] ))
             txtfile.close()
+            """
         print "Finished file: %s"%f
 if __name__== '__main__':
     if len(sys.argv)<2:

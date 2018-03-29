@@ -20,14 +20,13 @@ try:
     with open(jsonfile) as data_file:    
         settings = json.load(data_file)
 except IOError as e:
-    print("The provided file does not exist. Either put a default .json file "\
-    "in the directory of this script, or provide a valid file in the command line.")
+    print("The provided file does not exist. "\
+        "Please provide a valid file in the command line.")
     sys.exit()
 
 #load parameters
 baseDir = settings['baseDir'] # root directory on server
 skip = settings['skip'] # which subjects have already been converted
-EES = settings["EES"]
 wfs = settings["wfs"]# Water-fat-shift
 
 fmaps1 = glob.glob(baseDir + '/sub-*/fmap/*fmap1.nii.gz')

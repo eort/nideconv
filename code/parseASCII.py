@@ -165,7 +165,7 @@ def run(cfg):
         eye_df = pd.DataFrame(trials)
         # write file to csv
         eye_df.to_csv(writepath,index=False,na_rep="nan")     
-        print("finished parsing subject", ascf) 
+        print("finished parsing subject {}".format(ascf)) 
 
 if __name__ == '__main__':  
     if len(sys.argv)<2:

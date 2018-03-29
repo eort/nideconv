@@ -1,6 +1,15 @@
 """
 The json files for fieldmaps and functional niftis that come out of 
 heudiconv miss a couple of fields. This scripts adds them to it. 
+
+EES computed with formula: 
+1000 x WFS(pixels) / wfs x ( ETL + 1 ) / acceleration
+WFS = WaterFatShift
+ETL = ECHO TRAIN LENGTH
+wfs = based on Joerg: Radian / delta TE (2.3ms): 1/0.0023 = 434.7826
+VALUES TAKES FROM SEQUENCE TXT FILES
+
+(1000 x 12.5) / (434.7826 x(39 +1))/2 = 0.359375
 """
 import sys
 import json
@@ -19,8 +28,8 @@ try:
     with open(jsonfile) as data_file:    
         settings = json.load(data_file)
 except IOError as e:
-    print "The provided file does not exist. Either put a default .json file "\
-    "in the directory of this script, or provide a valid file in the command line."
+    print "The provided file does not exist. Please"\
+        "provide a valid file in the command line."
     sys.exit()
 
 # set/load parameters

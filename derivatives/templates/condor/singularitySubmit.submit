@@ -10,7 +10,7 @@ transfer_executable = False
 initialdir = /home/data/foraging/
 executable = $(initialdir)/code/runMRIQC.sh
 
-arguments  =  01
+#arguments  =  01
 queue 
 #arguments  =  02
 #queue 
