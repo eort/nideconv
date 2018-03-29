@@ -1,0 +1,14 @@
+universe = vanilla
+output = condor_logs/$(CLUSTER).$(PROCESS).out
+error = condor_logs/$(CLUSTER).$(PROCESS).err
+log = condor_logs/$(CLUSTER).$(PROCESS).log
+getenv = True
+request_cpus = 1
+request_memory = 4000
+should_transfer_files = NO
+transfer_executable = False
+initialdir = /home/data/foraging/
+executable = /usr/bin/python
+
+arguments = code/runDeconvolve.py configFiles/deconvolve_run_cfg_switchROI.json
+queue 

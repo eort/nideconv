@@ -1,0 +1,14 @@
+universe = vanilla
+output = condor_logs/$(CLUSTER).$(PROCESS).out
+error = condor_logs/$(CLUSTER).$(PROCESS).err
+log = condor_logs/$(CLUSTER).$(PROCESS).log
+getenv = True
+request_cpus = 1
+request_memory = 4000
+should_transfer_files = NO
+transfer_executable = False
+initialdir = /home/data/foraging/
+executable = /usr/bin/heudiconv
+
+arguments = -d /home/data/foraging/raw/dcm/{subject} -s ks38_0982.20170503.110243.18.tar.gz -f /home/data/foraging/code/heudiconv_heuristic.py -o /home/data/foraging/ --anon-cmd /home/data/foraging/code/anon_id.py -b --overwrite
+queue

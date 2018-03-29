@@ -1,0 +1,18 @@
+{
+	"root":".",
+	"subs":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,19,21],
+	"baseDir":"/home/data/foraging/",
+	"skip":[],
+	"behavDir":"derivatives/sub-%02d/ready",
+	"funcDir":"sub-%02d/func",
+	"outfilename":"sub-%02d_task-choice_run-%02d_events.tsv",
+    "evOnset":"stim_on",
+    "evDur":"RT",
+	"include_col": ["subject_nr","sac_no","df","practice","trial_no",
+        "trial_type","correct","miss","ITI","outlier","sac_to_S",
+        "switch","fixatedStim","stim_on","RT","resp_saccade", "conflict",
+        "CueOnsetTime","FirstFixOnsetTime","SecondFixOnsetTime",
+        "OffsetPrevTrial","corrITI","startCurRun","OnsetPrevTrial","totalITI"],
+    "onsetTypes":[["stim_on","RT"],["OffsetPrevTrial","corrITI"],
+    	["OnsetPrevTrial","totalITI"]]
+}

@@ -1,0 +1,23 @@
+{
+	"root":".",
+	"baseDir":"/home/data/foraging/",
+	"subjects":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,19,21],
+	"tmpworkDir": "tmp_work/1stlvl/%s",
+	"fmriprepDir": "fmriPrep/fmriprep",
+	"eventDir": "sub-%02d/func/FreeChoiceME",
+	"confoundDir": "sub-%02d/func",
+	"templateDir": "templates",
+	"TR":2.0,
+	"highpass_filter": 50,
+	"fwhm_size": 5.0,
+	"fsfDir": "scratch/sub-%02d/fsf/%s",
+	"templateFSF":"1stlvl_choice.fsf",
+	"templateSubmit":"glm_template.submit",
+	"analID":"choice",
+	"eventID":"FreeChoiceME",
+	"execute":1,
+	"modelDir":"scratch/sub-%02d/models",
+	"runsPerSubject":"runsPerSubject.tsv",
+	"localeBaseDir":"/run/user/1000/gvfs/sftp:host=medusa.ovgu.de,user=ort/home/data/foraging/scratch/",
+	"ICA":1
+}
