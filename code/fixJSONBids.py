@@ -45,6 +45,8 @@ if settings['func']:
         if any(["sub-{:02d}".format(sk) in func for sk in skip]):
             print("Skip nifti file {}".format(func))
             continue 
+        else:
+            print("Do nifti file {}".format(func))
         # make them writable if not already
         os.system("chmod 660 {}".format(func))
         # extract information from jsons

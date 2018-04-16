@@ -138,6 +138,7 @@ def run(cfg):
                     elif row.df == 'forced' and row.switch == False and row.trial_type == 0:
                         outDF.loc[index,"trialTypeComplete"] = 'reRepDD'        
                 outDFs.append(outDF)
+
             # concatenate all the event data frames, sort by onset and write to file
             outDF = pd.concat(outDFs+[preTrialDFcue,preTrialDFfirst,preTrialDFsecond])
             outDF = outDF.sort_values(by=['onset'])

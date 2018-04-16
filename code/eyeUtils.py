@@ -4,6 +4,11 @@ import re
 from IPython import embed as shell
 import itertools
 
+def printOutput(info):
+    print(info)
+    print(type(info))
+
+    
 def dist((x1,y1),(x2,y2)):
     """
     2-dim eukledian distance
