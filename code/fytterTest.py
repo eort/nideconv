@@ -18,10 +18,10 @@ try:
     with open(jsonfile) as data_file:    
         cfg = json.load(data_file)
 except: 
-    jsonfile = '/home/data/foraging/configFiles/deconvolve_run_cfg.json'    
+    jsonfile = '/home/data/foraging/derivatives/configFiles/deconvolve_run_cfg.json'    
     with open(jsonfile) as data_file:    
         cfg = json.load(data_file)
-    print 'there is soemthing'
+    print 'there is something'
 
 """"""""""""""""""""""""""""""
 "LOAD CONFIG FILE PARAMETERS"

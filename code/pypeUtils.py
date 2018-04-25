@@ -14,9 +14,33 @@ from IPython import embed as shell
 ################################
 #####   CREATE FUNCTIONS   #####
 ################################
+
+def make2ndLvlDesignMatrix(copes):
+    """
+    Creates a new cope structure. Instead of the 4 basic ones, 
+    it will make an extended list and match all the computed 
+    copes that are necessary for a certain contrast
+    """
+    regressors = {"reg%d"%copeI:[] for copeI,cope in enumerate(copes)}
+    for copeIdx,cope in enumerate(copes):
+        zeros = [0]*len(cope)
+        ones = [1]*len(cope)
+        regressors['reg%d'%copeIdx] = regressors['reg%d'%copeIdx] + ones
+        rest = [0,1,2,3]
+        rest.remove(copeIdx)
+        for r in rest:
+            regressors['reg%d'%r] = regressors['reg%d'%r] + zeros
+    # rename the dict keys
+    new_keys=['proSwitch','reSwitch','proRep','reRep']
+    old_keys=['reg0','reg1','reg2','reg3']
+    for new_key,old_key in zip(new_keys,old_keys):
+        regressors[new_key] = regressors.pop(old_key)
+    return regressors    
+
+
 def makeDesignFig(design_file):
     import numpy as np
-    import matplotlib as plt 
+    import matplotlib.pyplot as plt 
     # load design matrix
     desmtx=np.loadtxt(design_file,skiprows=5)
     # show design matrix
@@ -70,15 +94,14 @@ def transposeAndSelect(aNestedList,bunch_files):
     with the subject number. 
     """
     import numpy as np
-    validCopes = np.array([bf.validCopes for bf in bunch_files], dtype = bool).T.tolist()
-    outList = []
-    for copeIdx,copelist in enumerate(validCopes):
-        subList = []
-        for runIdx,c in enumerate(copelist):
-            if c:
-                subList.append(aNestedList[runIdx][c])
-        outList.append(subList)
-    return outList    
+    validCopes = [bf.validCopes for bf in bunch_files]#np.array([bf.validCopes for bf in bunch_files], dtype = bool).T.tolist()
+    copeTypes = {0:[],1:[],2:[],3:[]} # hardcode 4 event types
+    for runIdx,copelist in enumerate(validCopes):
+        for copeIdx,cope in enumerate(copelist):
+            if cope:
+                copeTypes[copeIdx].append(aNestedList[runIdx][copeIdx])
+
+    return [v for k,v in copeTypes.items()]
 
 def printOutput(info):
     print(info)

@@ -1,7 +1,7 @@
 universe = vanilla
-output = condor_logs/$(CLUSTER).$(PROCESS).out
-error = condor_logs/$(CLUSTER).$(PROCESS).err
-log = condor_logs/$(CLUSTER).$(PROCESS).log
+output = derivatives/condor_logs/$(CLUSTER).$(PROCESS).out
+error = derivatives/condor_logs/$(CLUSTER).$(PROCESS).err
+log = derivatives/condor_logs/$(CLUSTER).$(PROCESS).log
 getenv = True
 request_cpus = 1
 request_memory = 4000
@@ -10,5 +10,5 @@ transfer_executable = False
 initialdir = /home/data/foraging/
 executable = /usr/bin/python
 
-arguments = test.py
+arguments = -B code/GLM_nipype.py derivatives/configFiles/nipype/GLM_1stlvl_nipype.json
 queue
