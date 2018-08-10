@@ -74,11 +74,11 @@ def run(cfg):
     switchPlot.set(xlabel="Target Availability")
     switchPlot.set_xticklabels(['One Target Available','Both Targets Available'])
     sns.despine()
-    fig = switchPlot.get_figure()
-    if not os.path.isfile(os.path.join(writeDir,"SC_behaviour.pdf")):
-        fig.savefig(os.path.join(writeDir,"SC_behaviour.pdf"))
-    else: 
-        fig.savefig(os.path.join(writeDir,"SC_behaviour_%s.pdf"%np.random.randint(1000)))
+    #fig = switchPlot.get_figure()
+    #if not os.path.isfile(os.path.join(writeDir,"SC_behaviour.pdf")):
+    #    fig.savefig(os.path.join(writeDir,"SC_behaviour.pdf"))
+    #else: 
+    #    fig.savefig(os.path.join(writeDir,"SC_behaviour_%s.pdf"%np.random.randint(1000)))
     #sns.plt.show()
 
     # time between switches
@@ -92,11 +92,12 @@ def run(cfg):
     print Firstlvl1
     print Secondlvl1
     print Thirdlvl1
+
 if __name__ == '__main__':  
     try:
         jsonfile = sys.argv[1]
     except IndexError as e:
-        jsonfile = 'cfg.json'   
+        jsonfile = '/home/data/foraging/derivatives/configFiles/behav/behav_cfg.json'   
     try:
         with open(jsonfile) as data_file:    
             cfg = json.load(data_file)

@@ -1,0 +1,21 @@
+{
+	"root":".",
+	"baseDir":"/home/data/foraging/scratch",
+	"SUBS":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,19,21],
+	"signalDir":"sub-{sub:02d}/deconvolution/analyses/{sigID}/timeseries",
+	"dmDir":"sub-{sub:02d}/deconvolution/analyses/{sigID}/eventFiles",
+	"outDir":"sub-{sub:02d}/deconvolution/analyses/{sigID}/results/{analID}",
+	"eventTypes":["proSwitch","reSwitch","proRep","reRep","cue","error"],
+	"signalTemplate":"/*timeseries.npy",
+	"sample_frequency": 0.5,
+	"deconvolution_frequency": 2,
+	"deconvolution_interval": [-10, 20],
+	"events":["proSwitch","reSwitch","proRep","reRep","error","cue"],
+	"regressType":"ridge",
+	"add_covariates":1,
+	"parallel":1,
+	"analID":"switchROI_stimon_FIR_cov_ridge",
+	"sigID":"switchROI_stimon",
+	"submitfile":"/home/data/foraging/derivatives/templates/condor/python.submit",
+	"pyScript":"runFytter.py"
+}

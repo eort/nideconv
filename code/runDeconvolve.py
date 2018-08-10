@@ -124,7 +124,7 @@ def fooFunc(sub):
                 fd.relCovariates = [key for key in fd.covariates.keys() if key in ['proSwitch','reSwitch','proRep','reRep']]
 
                 s = f.add_subplot(111)
-                s.set_title('FIR responses, with bootstrapped SDs, and rsquare of %s in %s'%(fd.rsq,maskLabel))
+                s.set_title('FIR responses, with bootstrapped SDs, and rsquare of %s'%(fd.rsq))
                 for i,(dec,ev) in enumerate(zip(fd.betas_per_event_type.squeeze(),fd.covariates.keys())):
                     if ev not in ['cue','error']:
                         pl.plot(fd.deconvolution_interval_timepoints, dec)  
@@ -140,7 +140,7 @@ def fooFunc(sub):
                 pl.legend(fd.relCovariates)
                 sns.despine(offset=10)
                 #pl.show()
-                pl.savefig(op.join(plotDir%sub,"deconvolved_%s_%s_%s_%s.pdf"%(analID,sub,maskLabel,regressType)))
+                pl.savefig(op.join(outDir%sub,"deconvolved.pdf"))
                 pl.close()
     return deconv_results
 

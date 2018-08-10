@@ -1,0 +1,20 @@
+{
+	"root":".",
+	"baseDir":"/home/data/foraging/scratch",
+	"SUBS":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,19,21],
+	"signalDir":"deconvolution/analyses/{sigID}/timeseries",
+	"dmDir":"deconvolution/analyses/{sigID}/eventFiles",
+	"outDir":"deconvolution/analyses/{sigID}/results/{analID}",
+	"eventTypes":["proSwitch","reSwitch","proRep","reRep","cue","error"],
+	"signalTemplate":"/*timeseries.npy",
+	"sample_frequency": 0.5,
+	"deconvolution_frequency": 2,
+	"deconvolution_interval": [-10, 20],
+	"plotting": 1,
+	"events":["proSwitch","reSwitch","proRep","reRep","error","cue"],
+	"regressType":"lstsq",
+	"add_covariates":1,
+	"parallel":1,
+	"analID":"switchROI_stimoff_FIR_cov_{regressType}",
+	"sigID":"switchROI_stimoff"
+}

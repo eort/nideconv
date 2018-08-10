@@ -8,7 +8,7 @@ mode: loc2rem or rem2loc
 import os
 import sys
 import os.path as op
-from IPython import embed as shell
+#from IPython import embed as shell
 
 def run(inputfile,mode,outputfile):
     # set what to replace with what

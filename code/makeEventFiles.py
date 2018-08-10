@@ -7,18 +7,11 @@ eyetracking data
 event files contain events locked to different timepoints in a run: 
 onset of current run, offset of previous trial, onset of previous trial 
 to select the correct events one would have to select based on the variableonset type
-
-TODO
-
-CHECK SANITY
-FIND OUT WHY SUDDENLY MUCH FEWER EMPTY RUNS (WITH BOTH OLD AND NEW SCRIPT)
-
 """
 
 import os
 import os.path as op
 import pandas as pd
-from IPython import embed as shell
 import json
 import sys
 import glob
@@ -68,18 +61,25 @@ def run(cfg):
             outlierIdx = raw.loc[raw["outlier"]==False].index
             RTIdx = raw.loc[raw["RT"]>100].index
             conflictIdx = raw.loc[raw["conflict"]==False].index
-            #accIdx = raw.loc[raw["correct"]==1].index
-            #errorIdx = raw.loc[(raw["correct"]==0) & (raw["miss"]==0) & (raw["sac_no"]==raw["resp_saccade"])].index
             nanIdx = raw.loc[~pd.isnull(raw["switch"])].index
-            # combine index
-            cleanIdx = (firstSacIdx & tarDirectedSacIdx & practiceIdx &\
-              firstTrialIdx & missIdx & outlierIdx & RTIdx &\
-              conflictIdx & nanIdx )#& badSubjIdx)
+            #accIdx = raw.loc[raw["correct"]==1].index
+            errorIdx = raw.loc[(raw["correct"]==0) & (raw["miss"]==0) & (raw["sac_no"]==raw["resp_saccade"])].index
+            
+            # first combine general index
+            firstStepIdx = (practiceIdx & missIdx)
+
+            raw_precleaned = raw.loc[firstStepIdx]
+
+            # second add all the other stuff
+            cleanIdx = (firstSacIdx & tarDirectedSacIdx & \
+              firstTrialIdx & outlierIdx & RTIdx &\
+              conflictIdx & nanIdx )
 
             # When did run start
-            start = raw.startCurRun.iloc[0]
+            start = raw_precleaned.startCurRun.iloc[0]
             # apply filters
-            clean_data = raw.loc[cleanIdx]
+            clean_data = raw_precleaned.loc[cleanIdx]
+            error_data = raw_precleaned.loc[errorIdx]
             # get onset times for pretrial events
             cueOnset = 0.001*(clean_data.CueOnsetTime.unique()-start)
             FirstFixOnset = 0.001*(clean_data.FirstFixOnsetTime.unique()-start)
@@ -91,25 +91,33 @@ def run(cfg):
                     "onsetType":'onset','trialType': 'firstFix','trialTypeComplete': 'firstFix'}))
             preTrialDFsecond = pd.DataFrame(OrderedDict({'onset': SecondFixOnset, 'duration':0.5, \
                     "onsetType":'onset','trialType': 'secondFix','trialTypeComplete': 'secondFix'}))
-
-            # for each onset type run through the loop
+            
+           # for each onset type run through the loop
             outDFs = []
+            errorDFs = []
             for onsetKey,durationKey in onsetTypes:
-                # now do the same for all the other events in seconds
+                # add error trials
+                onset = 0.001*(error_data[onsetKey]-start)
+                # retrieve the event duration in second
+                durations = 0.001*error_data[durationKey]
+                errorDF = pd.DataFrame(OrderedDict({'onset':onset,'duration':durations,'onsetType':onsetKey,
+                            'trialType':'error','trialTypeComplete':'error'}))
+                
                 onset = 0.001*(clean_data[onsetKey]-start)
                 # retrieve the event duration in second
-                durations = clean_data[durationKey]*0.001
+                durations = 0.001*clean_data[durationKey]
                 # create default dataframe
                 outDF = pd.DataFrame(OrderedDict({'onset':onset,'duration':durations,'onsetType':onsetKey}))
                 # manual hack to make "onset" being the standard onset type
                 if onsetKey == 'stim_on':
                     outDF['onsetType'] = 'onset'
+                    errorDF['onsetType'] = 'onset'
                 # add event type information
                 for index,row in clean_data.iterrows():
                     # if there is a mistake, add them as such and skip the rest
                     if row.correct == 0:
-                        outDF.loc[index,"trialType"] = 'error'
-                        outDF.loc[index,"trialTypeComplete"] = 'error'
+                        #outDF.loc[index,"trialType"] = 'error'
+                        #outDF.loc[index,"trialTypeComplete"] = 'error'
                         continue
                     # first check the basic event types
                     if row.df == 'forced' and row.switch == False:
@@ -138,11 +146,12 @@ def run(cfg):
                     elif row.df == 'forced' and row.switch == False and row.trial_type == 0:
                         outDF.loc[index,"trialTypeComplete"] = 'reRepDD'        
                 outDFs.append(outDF)
+                errorDFs.append(errorDF)
 
             # concatenate all the event data frames, sort by onset and write to file
-            outDF = pd.concat(outDFs+[preTrialDFcue,preTrialDFfirst,preTrialDFsecond])
+            outDF = pd.concat(outDFs+ errorDFs+[preTrialDFcue,preTrialDFfirst,preTrialDFsecond])
             outDF = outDF.sort_values(by=['onset'])
-            outDF.to_csv(outfilename, index = False, sep = '\t')
+            #outDF.to_csv(outfilename, index = False, sep = '\t')
 
 if __name__== '__main__':
     try:
